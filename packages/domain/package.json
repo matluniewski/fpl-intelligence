@@ -5,7 +5,8 @@
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
-    "./testing": "./src/testing/synthetic-fixtures.ts"
+    "./testing": "./src/testing/synthetic-fixtures.ts",
+    "./testing/recommendation": "./src/testing/synthetic-recommendation.ts"
   },
   "scripts": {
     "build": "tsc --noEmit",

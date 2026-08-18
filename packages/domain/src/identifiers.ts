@@ -17,6 +17,9 @@ export type SourceId = Identifier<"SourceId">;
 export type ProviderId = Identifier<"ProviderId">;
 export type SourcePolicyId = Identifier<"SourcePolicyId">;
 export type EphemeralArtifactId = Identifier<"EphemeralArtifactId">;
+export type RecommendationId = Identifier<"RecommendationId">;
+export type RecommendationOptionId = Identifier<"RecommendationOptionId">;
+export type RecommendationEvidenceId = Identifier<"RecommendationEvidenceId">;
 
 function createIdentifier<Kind extends string>(
   value: string,
@@ -58,3 +61,12 @@ export const createSourcePolicyId = (value: string): SourcePolicyId =>
   createIdentifier(value, "SourcePolicyId");
 export const createEphemeralArtifactId = (value: string): EphemeralArtifactId =>
   createIdentifier(value, "EphemeralArtifactId");
+export const createRecommendationId = (value: string): RecommendationId =>
+  createIdentifier(value, "RecommendationId");
+export const createRecommendationOptionId = (
+  value: string,
+): RecommendationOptionId => createIdentifier(value, "RecommendationOptionId");
+export const createRecommendationEvidenceId = (
+  value: string,
+): RecommendationEvidenceId =>
+  createIdentifier(value, "RecommendationEvidenceId");
