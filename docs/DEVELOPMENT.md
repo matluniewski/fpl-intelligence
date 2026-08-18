@@ -8,7 +8,7 @@ Last updated: 2026-08-18
 
 ## 1. Purpose
 
-This guide defines the reproducible local-development baseline for FPL Intelligence. Linear remains the source of truth for issue scope and acceptance criteria. Detailed agent and pull-request workflow rules will be added by FPL-23.
+This guide defines the reproducible local-development baseline for FPL Intelligence. Linear remains the source of truth for issue scope and acceptance criteria. Detailed agent and pull-request workflow rules live in [AGENT_WORKFLOW.md](./AGENT_WORKFLOW.md).
 
 ## 2. Prerequisites
 
@@ -142,3 +142,5 @@ Then review:
 - documentation and `.env.example` changes;
 - privacy, compliance, and human-approval boundaries; and
 - whether a consequential decision needs an ADR.
+
+Then follow the draft pull request, CI, review, approval, merge, and Linear synchronization stages in [AGENT_WORKFLOW.md](./AGENT_WORKFLOW.md).
