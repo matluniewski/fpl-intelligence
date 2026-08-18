@@ -10,7 +10,7 @@ Last updated: 2026-08-18
 
 This document defines the initial technical boundaries and dependency rules for FPL Intelligence. It is intentionally provider-neutral and deployment-neutral. It describes how future implementation must be shaped; it does not claim that the corresponding capabilities already exist.
 
-The product definition lives in [PRODUCT.md](./PRODUCT.md). The provider-independent origin, lineage, and lifecycle contract for external data lives in [DATA_PROVENANCE.md](./DATA_PROVENANCE.md). Linear owns implementation scope, dependencies, and acceptance criteria. Consequential architecture choices are recorded in [architecture decision records](./adr/README.md) when required.
+The product definition lives in [PRODUCT.md](./PRODUCT.md). The provider-independent origin, lineage, and lifecycle contract for external data lives in [DATA_PROVENANCE.md](./DATA_PROVENANCE.md). The provider-independent variable-usage and cost-estimation contract lives in [COST_TELEMETRY.md](./COST_TELEMETRY.md). Linear owns implementation scope, dependencies, and acceptance criteria. Consequential architecture choices are recorded in [architecture decision records](./adr/README.md) when required.
 
 ## 2. Architectural goals
 
@@ -182,6 +182,8 @@ Expected boundary failures use typed or categorized application errors. Provider
 
 Observability must expose freshness, latency, failures, retries, policy/kill-switch state, rate and cost budgets, and algorithm versions without logging screenshot content, raw provider payloads, personal data, or unnecessary health information. Production analytics and observability providers require separate approved work.
 
+Actual metered usage, avoided usage from caching or deduplication, monetary estimates, and analytical cost allocations remain distinct. Shared ingestion is recorded once and is not duplicated for each consumer. Missing usage or pricing data remains visibly unknown rather than defaulting to zero. The conceptual event, attribution, aggregation, privacy, and downstream testing requirements are defined in [COST_TELEMETRY.md](./COST_TELEMETRY.md); exact persistence and provider instrumentation remain deferred to their owning issues.
+
 ## 10. Security, privacy, and compliance controls
 
 - Validate all external input at the trust boundary.
@@ -219,3 +221,5 @@ FPL-17 adds the framework-independent `@fpl-intelligence/domain` package with:
 - synthetic fixtures for adapter contract tests.
 
 The package parameterizes versioned FPL rules rather than claiming that test values describe a current season. It does not implement team import adapters, provider access, persistence, projections, optimization, news processing, authentication, account actions, or UI.
+
+FPL-41 defines the provider-independent usage and cost telemetry architecture for external requests, model processing, background work, meaningfully attributable storage/database usage, and cache or deduplication savings. It selects no provider or telemetry implementation and adds no billing, subscription, pricing-plan, or payment behavior.
