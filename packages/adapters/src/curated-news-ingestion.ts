@@ -75,7 +75,14 @@ export class CuratedNewsIngestion {
         !Number.isSafeInteger(policy.maximumItemAgeMs) ||
         policy.maximumItemAgeMs <= 0 ||
         policy.reviewedAt > policy.expiresAt ||
-        policy.contentPolicy.sourcePolicyId !== policy.policyId
+        policy.allowedEnvironments.length === 0 ||
+        new Set(policy.allowedEnvironments).size !==
+          policy.allowedEnvironments.length ||
+        policy.contentPolicy.sourcePolicyId !== policy.policyId ||
+        policy.contentPolicy.policyVersion !== policy.termsVersion ||
+        policy.contentPolicy.retention === "not_reviewed" ||
+        policy.contentPolicy.display === "not_reviewed" ||
+        policy.contentPolicy.externalProcessing === "not_reviewed"
       )
         throw new RangeError("News source policy configuration is invalid.");
       if (policy.contentPolicy.commercialUse !== policy.decision)
@@ -110,6 +117,7 @@ export class CuratedNewsIngestion {
         Object.freeze({
           ...policy,
           allowedEnvironments: Object.freeze([...policy.allowedEnvironments]),
+          contentPolicy: Object.freeze({ ...policy.contentPolicy }),
         }),
       );
     }
@@ -136,7 +144,28 @@ export class CuratedNewsIngestion {
         throw new RangeError(
           "Research rights record is not operationally complete.",
         );
-      this.#rights.set(rights.rawNewsItemId, Object.freeze({ ...rights }));
+      const researchPolicy = this.#policies.get(RESEARCH_NEWS_POLICY_ID);
+      if (
+        researchPolicy === undefined ||
+        this.#permissionRank(researchPolicy.contentPolicy.commercialUse) >
+          this.#permissionRank(rights.commercialUse) ||
+        this.#permissionRank(researchPolicy.contentPolicy.retention) >
+          this.#permissionRank(rights.retention) ||
+        this.#permissionRank(researchPolicy.contentPolicy.display) >
+          this.#permissionRank(rights.display) ||
+        this.#permissionRank(researchPolicy.contentPolicy.externalProcessing) >
+          this.#permissionRank(rights.externalProcessing)
+      )
+        throw new RangeError(
+          "Research source policy cannot exceed per-record rights.",
+        );
+      this.#rights.set(
+        rights.rawNewsItemId,
+        Object.freeze({
+          ...rights,
+          rightsReference: rights.rightsReference.trim(),
+        }),
+      );
     }
   }
 
@@ -329,11 +358,24 @@ export class CuratedNewsIngestion {
   ): Promise<boolean> {
     return this.#options.store.getById(id).then((record) => {
       if (record === null || record.lifecycleState !== "active") return false;
-      const decision = record.item.contentPolicy?.externalProcessing;
+      const contentPolicy = record.item.contentPolicy;
+      if (contentPolicy === null) return false;
+      const decision = contentPolicy.externalProcessing;
       if (decision !== "permitted" && decision !== "restricted") return false;
+      const policy = this.#policies.get(contentPolicy.sourcePolicyId);
+      if (
+        policy === undefined ||
+        !policy.enabled ||
+        policy.killSwitchActive ||
+        policy.reviewedAt > at ||
+        policy.expiresAt < at ||
+        (policy.contentPolicy.externalProcessing !== "permitted" &&
+          policy.contentPolicy.externalProcessing !== "restricted")
+      )
+        return false;
       const rights = this.#rights.get(id);
       return (
-        record.item.contentPolicy?.sourcePolicyId !== RESEARCH_NEWS_POLICY_ID ||
+        contentPolicy.sourcePolicyId !== RESEARCH_NEWS_POLICY_ID ||
         (rights !== undefined &&
           rights.expiresAt >= at &&
           (rights.externalProcessing === "permitted" ||
@@ -463,6 +505,15 @@ export class CuratedNewsIngestion {
     if (normalized.length === 0)
       throw new RangeError(`${label} must not be empty.`);
     return normalized;
+  }
+
+  #permissionRank(
+    decision:
+      "permitted" | "restricted" | "blocked" | "unclear" | "not_reviewed",
+  ): number {
+    if (decision === "permitted") return 2;
+    if (decision === "restricted") return 1;
+    return 0;
   }
 
   async #recordUsage(

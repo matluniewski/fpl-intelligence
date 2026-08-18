@@ -1,3 +1,4 @@
+import { createSourcePolicyId } from "@fpl-intelligence/domain";
 import type {
   CommercialUseClassification,
   NewsContentPolicy,
@@ -12,8 +13,12 @@ import type {
   Version,
 } from "@fpl-intelligence/domain";
 
-export const SYNTHETIC_NEWS_POLICY_ID = "news.synthetic.fixture.v1";
-export const RESEARCH_NEWS_POLICY_ID = "news.first-party.research.v1";
+export const SYNTHETIC_NEWS_POLICY_ID = createSourcePolicyId(
+  "news.synthetic.fixture.v1",
+);
+export const RESEARCH_NEWS_POLICY_ID = createSourcePolicyId(
+  "news.first-party.research.v1",
+);
 
 export type NewsRuntimeEnvironment =
   | "test"

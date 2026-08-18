@@ -425,11 +425,26 @@ describe("curated news ingestion", () => {
 
   it("applies a runtime kill switch before serving cached data", async () => {
     const { ingestion } = setup();
-    await ingestion.ingest(REQUEST);
+    const result = await ingestion.ingest(REQUEST);
     ingestion.setKillSwitch(POLICY_ID, true);
+    expect(
+      await ingestion.authorizeExternalProcessing(
+        result.items[0]!.item.rawNewsItemId,
+        NOW,
+      ),
+    ).toBe(false);
     await expect(ingestion.ingest(REQUEST)).rejects.toMatchObject({
       code: "kill_switch_active",
     });
+  });
+
+  it("rejects policy versions that do not match the reviewed terms version", () => {
+    expect(() =>
+      setup({
+        ...POLICY,
+        termsVersion: createVersion("different-terms"),
+      }),
+    ).toThrow("News source policy configuration is invalid.");
   });
 
   it("aborts timed-out source reads and records a cancelled request", async () => {

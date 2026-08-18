@@ -90,7 +90,10 @@ export class FirstPartyResearchNewsSourceAdapter implements CuratedNewsSourceAda
   ): Readonly<{ item: RawNewsItem; provenance: ProvenanceRecord }> {
     const externalId = this.#nonEmpty(input.externalId, "External ID");
     const summaryCode = this.#nonEmpty(input.summaryCode, "Summary code");
-    this.#nonEmpty(input.rightsReference, "Rights reference");
+    const rightsReference = this.#nonEmpty(
+      input.rightsReference,
+      "Rights reference",
+    );
     const sourceId = createSourceId("news-source.first-party.research");
     const providerId = createProviderId("news-provider.first-party.direct");
     const provenanceId = createProvenanceId(`news.research.${externalId}`);
@@ -109,7 +112,7 @@ export class FirstPartyResearchNewsSourceAdapter implements CuratedNewsSourceAda
         observedAt: input.publishedAt,
         environment: "development",
         purpose: environment,
-        ingestionReference: input.rightsReference,
+        ingestionReference: rightsReference,
       },
       externalReference: { namespace: "first-party-research", externalId },
       policyAssessment: {

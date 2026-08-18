@@ -76,9 +76,9 @@ function parsePayload(value: unknown): SyntheticNewsFixtureDto {
       );
     }
     return Object.freeze({
-      external_id: externalId,
+      external_id: externalId.trim(),
       published_at: createUtcInstant(publishedAt),
-      synthetic_summary_code: summaryCode,
+      synthetic_summary_code: summaryCode.trim(),
     });
   });
   return Object.freeze({
