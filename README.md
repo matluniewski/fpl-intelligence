@@ -60,6 +60,8 @@ pnpm build
 
 Run the complete local gate with `pnpm check`. See [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md) for workspace conventions and [docs/AGENT_WORKFLOW.md](docs/AGENT_WORKFLOW.md) for the issue-to-merge delivery process.
 
+Pull requests to `main` run independent GitHub Actions checks for formatting, linting, TypeScript, tests, and the production build. All required checks must pass before merge.
+
 ## Safety boundary
 
 FPL Intelligence provides advice only. It must not store FPL credentials or perform a transfer, lineup, captaincy, bench, or chip action without a permitted integration and explicit human approval. The current MVP performs no official FPL account mutation.
