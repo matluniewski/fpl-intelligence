@@ -175,4 +175,10 @@ Configure a GitHub branch ruleset or classic branch protection for `main` after 
 
 The current single-maintainer phase does not require an approving GitHub review because a pull request author cannot approve their own change. The explicit human merge-approval gate in [AGENT_WORKFLOW.md](./AGENT_WORKFLOW.md) remains mandatory. Add an independent required approval when a second eligible reviewer is available.
 
-If repository permissions or plan limitations prevent applying these settings through the API, configure them manually in **Settings → Rules → Rulesets** and verify them with a test pull request. Treat any temporary absence of branch protection as a visible repository risk, not as permission to skip the documented checks or human merge approval.
+If API permissions prevent applying these settings while the repository plan supports them, configure them manually in **Settings → Rules → Rulesets** and verify them with a test pull request.
+
+### Current enforcement limitation
+
+As verified during FPL-14 on 2026-08-18, GitHub returns `403` for both branch protection and repository rulesets because the private repository's current plan does not provide those features. Enabling technical enforcement therefore requires either a plan upgrade or making the repository public. Both are separate commercial or public-release decisions and are not authorized by FPL-14.
+
+Until that decision is approved and the rules are configured, the delivery workflow must enforce the same gate operationally: do not merge while any documented check is failing, skipped, pending, stale, or absent, and still require explicit human merge approval. Keep the missing platform enforcement visible as a repository risk and re-check it whenever the GitHub plan or repository visibility changes.
