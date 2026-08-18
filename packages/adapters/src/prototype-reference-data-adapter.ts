@@ -18,7 +18,6 @@ import type {
 import { mapPrototypeReferenceData } from "./prototype-reference-data-mapper";
 import { parsePrototypeReferenceDataDto } from "./prototype-reference-data-dto";
 import type { ReferenceDataSource } from "./reference-data-source";
-import { NOOP_USAGE_RECORDER } from "./usage-telemetry";
 import type {
   ReferenceDataUsageEvent,
   UsageOutcome,
@@ -42,7 +41,7 @@ export interface PrototypeReferenceDataAdapterOptions {
   readonly sourcePolicy: ReferenceDataSourcePolicy;
   readonly supportedSchemaVersion: string;
   readonly timeoutMs: number;
-  readonly usageRecorder?: UsageRecorder;
+  readonly usageRecorder: UsageRecorder;
 }
 
 function assertNonEmpty(value: string, label: string): string {
@@ -114,7 +113,7 @@ export class PrototypeReferenceDataAdapter implements FootballReferenceDataPort 
       "Supported source schema version",
     );
     this.#timeoutMs = options.timeoutMs;
-    this.#usageRecorder = options.usageRecorder ?? NOOP_USAGE_RECORDER;
+    this.#usageRecorder = options.usageRecorder;
   }
 
   async loadReferenceData(
@@ -173,12 +172,22 @@ export class PrototypeReferenceDataAdapter implements FootballReferenceDataPort 
       });
     } catch (error) {
       const normalized = normalizeSourceError(error);
-      await this.#recordUsage({
+      const telemetryRecorded = await this.#recordUsage({
         eventId,
         occurredAt,
         outcome: outcomeForError(normalized),
         recordsReturned: 0,
       });
+
+      if (!telemetryRecorded) {
+        throw new ReferenceDataAdapterError(
+          normalized.code,
+          normalized.message,
+          { ...normalized.details, usageTelemetry: "unavailable" },
+          { cause: normalized },
+        );
+      }
+
       throw normalized;
     }
   }

@@ -36,7 +36,3 @@ export interface ReferenceDataUsageEvent {
 export interface UsageRecorder {
   record(event: ReferenceDataUsageEvent): Promise<void>;
 }
-
-export const NOOP_USAGE_RECORDER: UsageRecorder = Object.freeze({
-  async record(): Promise<void> {},
-});

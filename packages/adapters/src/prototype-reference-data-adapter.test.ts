@@ -67,9 +67,7 @@ function createAdapter(
       options.sourcePolicy ?? SYNTHETIC_REFERENCE_DATA_SOURCE_POLICY,
     supportedSchemaVersion: "synthetic-schema-v1",
     timeoutMs: 100,
-    ...(options.usageRecorder === undefined
-      ? {}
-      : { usageRecorder: options.usageRecorder }),
+    usageRecorder: options.usageRecorder ?? new CapturingUsageRecorder(),
   });
 }
 
@@ -215,6 +213,7 @@ describe("PrototypeReferenceDataAdapter", () => {
         sourcePolicy: SYNTHETIC_REFERENCE_DATA_SOURCE_POLICY,
         supportedSchemaVersion: "synthetic-schema-v1",
         timeoutMs: 100,
+        usageRecorder: new CapturingUsageRecorder(),
       });
 
       await expect(adapter.loadReferenceData(QUERY)).rejects.toMatchObject({
@@ -244,6 +243,7 @@ describe("PrototypeReferenceDataAdapter", () => {
       sourcePolicy: SYNTHETIC_REFERENCE_DATA_SOURCE_POLICY,
       supportedSchemaVersion: "synthetic-schema-v1",
       timeoutMs: 5,
+      usageRecorder: new CapturingUsageRecorder(),
     });
 
     await expect(adapter.loadReferenceData(QUERY)).rejects.toMatchObject({
@@ -297,6 +297,23 @@ describe("PrototypeReferenceDataAdapter", () => {
     expect(result.value.players).toHaveLength(6);
   });
 
+  it("keeps telemetry failure visible on an adapter failure", async () => {
+    const payload = mutablePayload();
+    payload.snapshot.players[0]!["position"] = "winger";
+    const usageRecorder: UsageRecorder = {
+      async record(): Promise<void> {
+        throw new Error("synthetic recorder failure");
+      },
+    };
+
+    await expect(
+      createAdapter({ payload, usageRecorder }).loadReferenceData(QUERY),
+    ).rejects.toMatchObject({
+      code: "invalid_payload",
+      details: { usageTelemetry: "unavailable" },
+    });
+  });
+
   it("categorizes malformed JSON without exposing parser output", async () => {
     const source = new JsonTextReferenceDataSource(async () => "{not-json");
     const adapter = new PrototypeReferenceDataAdapter({
@@ -311,6 +328,7 @@ describe("PrototypeReferenceDataAdapter", () => {
       sourcePolicy: SYNTHETIC_REFERENCE_DATA_SOURCE_POLICY,
       supportedSchemaVersion: "synthetic-schema-v1",
       timeoutMs: 100,
+      usageRecorder: new CapturingUsageRecorder(),
     });
 
     await expect(adapter.loadReferenceData(QUERY)).rejects.toMatchObject({

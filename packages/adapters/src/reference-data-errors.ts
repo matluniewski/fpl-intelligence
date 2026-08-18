@@ -14,6 +14,7 @@ export interface ReferenceDataAdapterErrorDetails {
   readonly path?: string;
   readonly retryAfterMs?: number;
   readonly statusCode?: number;
+  readonly usageTelemetry?: "unavailable";
 }
 
 export class ReferenceDataAdapterError extends Error {
