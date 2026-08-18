@@ -16,6 +16,7 @@ Start with:
 - [Architecture](docs/ARCHITECTURE.md)
 - [External data provenance architecture](docs/DATA_PROVENANCE.md)
 - [Provider usage and cost telemetry architecture](docs/COST_TELEMETRY.md)
+- [Recommendation contract](docs/RECOMMENDATIONS.md)
 - [Development guide](docs/DEVELOPMENT.md)
 - [Agent delivery workflow](docs/AGENT_WORKFLOW.md)
 - [MVP validation plan](docs/VALIDATION.md)
