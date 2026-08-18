@@ -223,7 +223,6 @@ export function projectPlayerGameweek(
   );
 
   return Object.freeze({
-    projectionKey: `${input.playerId}:${input.gameweekId.seasonId}:${input.gameweekId.number}:${input.modelVersion}:${input.rules.identity.rulesetId}:${input.rules.identity.version}`,
     playerId: input.playerId,
     position: input.position,
     gameweekId: input.gameweekId,

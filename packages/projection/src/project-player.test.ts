@@ -103,7 +103,8 @@ describe("projection model v0", () => {
     expect(result.explanation.provenanceRefs).toEqual([
       input.rateSignals[0]!.provenanceRefs[0],
     ]);
-    expect(result.projectionKey).toContain(input.modelVersion);
+    expect(result.explanation.modelVersion).toBe(input.modelVersion);
+    expect(result.explanation.rulesIdentity).toEqual(input.rules.identity);
   });
 
   it("adds fixture projections for a double gameweek", () => {
@@ -222,6 +223,7 @@ describe("projection model v0", () => {
         ...input,
         rules: {
           ...input.rules,
+          appearance: { upTo59Minutes: 2, atLeast60Minutes: 1 },
           goal: { ...input.rules.goal, forward: -4 },
           yellowCard: 1,
         },
@@ -229,6 +231,10 @@ describe("projection model v0", () => {
     ).toThrowError(
       expect.objectContaining<Partial<ProjectionInputError>>({
         issues: expect.arrayContaining([
+          expect.objectContaining({
+            code: "invalid_value",
+            path: "rules.appearance",
+          }),
           expect.objectContaining({
             code: "invalid_value",
             path: "rules.goal.forward",

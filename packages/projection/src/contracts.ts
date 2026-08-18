@@ -153,7 +153,6 @@ export interface ProjectionExplanation {
 }
 
 export interface PlayerGameweekProjection {
-  readonly projectionKey: string;
   readonly playerId: PlayerId;
   readonly position: Position;
   readonly gameweekId: GameweekId;

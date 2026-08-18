@@ -67,6 +67,14 @@ function validateRules(
     "rules.appearance.atLeast60Minutes",
     { minimum: 0 },
   );
+  if (rules.appearance.atLeast60Minutes < rules.appearance.upTo59Minutes) {
+    issues.push({
+      code: "invalid_value",
+      path: "rules.appearance",
+      message:
+        "At-least-60-minute appearance points must not be lower than up-to-59-minute points.",
+    });
+  }
   addFiniteIssue(issues, rules.assist, "rules.assist", { minimum: 0 });
   addFiniteIssue(
     issues,
