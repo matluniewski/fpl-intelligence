@@ -492,7 +492,7 @@ Publicly accessible FPL endpoints are not assumed to grant commercial rights. Pr
 
 ## 12. Validation plan
 
-FPL-54 owns thresholds and the execution plan. This document defines the product hypotheses and measurement concepts only; it does not authorize production analytics infrastructure.
+FPL-54 owns thresholds and the execution plan in [VALIDATION.md](./VALIDATION.md). This document defines the product hypotheses and measurement concepts only; it does not authorize production analytics infrastructure.
 
 | Hypothesis | Evidence concept |
 | --- | --- |
