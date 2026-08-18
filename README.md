@@ -15,6 +15,7 @@ Start with:
 - [Product specification](docs/PRODUCT.md)
 - [Architecture](docs/ARCHITECTURE.md)
 - [Development guide](docs/DEVELOPMENT.md)
+- [Agent delivery workflow](docs/AGENT_WORKFLOW.md)
 - [MVP validation plan](docs/VALIDATION.md)
 - [Screenshot privacy requirements](docs/SCREENSHOT_PRIVACY.md)
 - [News source compliance register](docs/NEWS_SOURCE_COMPLIANCE.md)
@@ -57,7 +58,7 @@ pnpm test
 pnpm build
 ```
 
-Run the complete local gate with `pnpm check`. See [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md) for workspace conventions and contribution details.
+Run the complete local gate with `pnpm check`. See [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md) for workspace conventions and [docs/AGENT_WORKFLOW.md](docs/AGENT_WORKFLOW.md) for the issue-to-merge delivery process.
 
 ## Safety boundary
 
