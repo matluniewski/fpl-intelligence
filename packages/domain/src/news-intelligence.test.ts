@@ -54,6 +54,24 @@ describe("news intelligence contracts", () => {
     );
   });
 
+  it("does not retain references for policy-blocked raw content", () => {
+    expect(() =>
+      createRawNewsItem({
+        ...SYNTHETIC_RAW_NEWS_ITEM,
+        contentReference: {
+          availability: "policy_blocked",
+          locator: "synthetic:blocked-content",
+        },
+      }),
+    ).toThrowError(
+      expect.objectContaining<Partial<NewsContractError>>({
+        issues: expect.arrayContaining([
+          expect.objectContaining({ code: "content_policy_violation" }),
+        ]),
+      }),
+    );
+  });
+
   it("runtime-validates an untrusted extraction candidate", () => {
     expect(
       validateClaimCandidate({
@@ -219,6 +237,22 @@ describe("news intelligence contracts", () => {
       expect.objectContaining<Partial<NewsContractError>>({
         issues: expect.arrayContaining([
           expect.objectContaining({ code: "empty_value" }),
+        ]),
+      }),
+    );
+  });
+
+  it("fails closed for unknown Evidence semantics at runtime", () => {
+    expect(() =>
+      createEvidence({
+        ...SYNTHETIC_EVIDENCE,
+        stance: "invented" as never,
+        lifecycleState: "invented" as never,
+      }),
+    ).toThrowError(
+      expect.objectContaining<Partial<NewsContractError>>({
+        issues: expect.arrayContaining([
+          expect.objectContaining({ code: "invalid_value" }),
         ]),
       }),
     );

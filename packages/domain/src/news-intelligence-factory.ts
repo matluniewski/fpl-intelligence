@@ -58,6 +58,36 @@ const CONFLICT = [
   "unresolved_conflict",
   "resolved_by_rule",
 ] as const;
+const PERMISSION_DECISIONS = [
+  "permitted",
+  "restricted",
+  "blocked",
+  "not_reviewed",
+] as const;
+const COMMERCIAL_USE = [
+  "permitted",
+  "restricted",
+  "unclear",
+  "not_reviewed",
+] as const;
+const EVIDENCE_STANCES = ["supports", "contradicts", "context"] as const;
+const EVIDENCE_REFERENCE_KINDS = [
+  "quote_metadata",
+  "source_reference",
+  "content_fingerprint",
+  "content_unavailable",
+] as const;
+const LIFECYCLE_STATES = [
+  "active",
+  "stale",
+  "expired",
+  "corrected",
+  "withdrawn",
+  "deleted",
+  "inaccessible",
+  "quarantined",
+  "policy_disabled",
+] as const;
 
 function issue(
   code: NewsContractValidationIssue["code"],
@@ -169,6 +199,18 @@ export function createRawNewsItem(input: RawNewsItemInput): RawNewsItem {
       ),
     );
   if (
+    input.contentReference.availability === "policy_blocked" &&
+    (input.contentReference.locator !== undefined ||
+      input.contentReference.fingerprint !== undefined)
+  )
+    issues.push(
+      issue(
+        "content_policy_violation",
+        "contentReference",
+        "Policy-blocked content cannot retain a locator or fingerprint.",
+      ),
+    );
+  if (
     input.contentReference.fingerprint !== undefined &&
     !nonEmpty(input.contentReference.fingerprint)
   )
@@ -187,6 +229,20 @@ export function createRawNewsItem(input: RawNewsItemInput): RawNewsItem {
       ),
     );
   const policy = input.contentPolicy ?? null;
+  if (
+    policy !== null &&
+    (!COMMERCIAL_USE.includes(policy.commercialUse) ||
+      !PERMISSION_DECISIONS.includes(policy.retention) ||
+      !PERMISSION_DECISIONS.includes(policy.display) ||
+      !PERMISSION_DECISIONS.includes(policy.externalProcessing))
+  )
+    issues.push(
+      issue(
+        "invalid_value",
+        "contentPolicy",
+        "Content policy contains an unrecognized decision.",
+      ),
+    );
   const policyState =
     policy?.commercialUse === "permitted"
       ? "permitted"
@@ -400,6 +456,26 @@ export function createEvidence(input: EvidenceInput): Evidence {
         "empty_value",
         "sourceContextCode",
         "Evidence source context is required.",
+      ),
+    );
+  if (!EVIDENCE_STANCES.includes(input.stance))
+    issues.push(
+      issue("invalid_value", "stance", "Evidence stance is not recognized."),
+    );
+  if (!EVIDENCE_REFERENCE_KINDS.includes(input.reference.kind))
+    issues.push(
+      issue(
+        "invalid_value",
+        "reference.kind",
+        "Evidence reference kind is not recognized.",
+      ),
+    );
+  if (!LIFECYCLE_STATES.includes(input.lifecycleState))
+    issues.push(
+      issue(
+        "invalid_value",
+        "lifecycleState",
+        "Evidence lifecycle state is not recognized.",
       ),
     );
   if (
