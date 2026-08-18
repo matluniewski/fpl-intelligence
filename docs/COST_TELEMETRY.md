@@ -111,7 +111,7 @@ UsageEvent
 ```text
 UsageMeasurement
   metric
-  quantity
+  quantity?
   unit
   measurementStatus
 ```
@@ -126,7 +126,7 @@ Supported metrics are controlled and documented by the owning adapter. Examples 
 | Database        | queries or provider-reported compute units where meaningfully attributable |
 | Storage         | bytes written, byte-hours, operations where meaningfully attributable      |
 
-Quantities must be non-negative and use an exact integer smallest unit where possible. A missing measurement is `unknown`; it must not be recorded as zero. Provider-specific meters are normalized at the adapter boundary while the original provider meter name may remain in controlled infrastructure metadata when needed for reconciliation.
+`measurementStatus` is one of `measured`, `provider_reported`, `estimated`, or `unknown`. Quantities must be non-negative and use an exact integer smallest unit where possible. An `unknown` measurement omits `quantity`; it must not be recorded as zero. An estimated measurement must be reproducible from the event's instrumentation version and documented adapter rule. Provider-specific meters are normalized at the adapter boundary while the original provider meter name may remain in controlled infrastructure metadata when needed for reconciliation.
 
 ### 5.3 AttributionContext
 
@@ -174,14 +174,16 @@ CostEstimate
 - `unknown`: usage or pricing is missing, ambiguous, tier-dependent, or otherwise not defensibly estimable; or
 - `not_applicable`: the event has no monetary cost under the declared model and this is known rather than assumed.
 
-Money uses an integer minor unit and ISO currency code. Estimates retain the pricing reference, estimator version, and calculation basis. Free tiers, committed spend, tiered rates, bundles, credits, taxes, and currency conversion must be modeled explicitly or left unknown; they must not be flattened into false precision. Only a separately approved reconciliation system could distinguish provider-reported or invoiced amounts from estimates.
+Money uses an integer minor unit and ISO currency code. Estimates retain the pricing reference, estimator version, and a controlled calculation-basis reference rather than arbitrary text. Free tiers, committed spend, tiered rates, bundles, credits, taxes, and currency conversion must be modeled explicitly or left unknown; they must not be flattened into false precision. Only a separately approved reconciliation system could distinguish provider-reported or invoiced amounts from estimates.
 
 ### 5.6 AvoidedUsageEvent
 
 ```text
 AvoidedUsageEvent
   eventId
+  idempotencyKey
   occurredAt
+  recordedAt
   serviceCategory
   providerRef
   operation
@@ -190,9 +192,10 @@ AvoidedUsageEvent
   attribution
   correlation
   baselineVersion
+  instrumentationVersion
 ```
 
-Reasons include `cache_hit`, `deduplicated`, `batched`, and `shared_result_reused`. `baselineVersion` identifies the deterministic rule used to claim that an operation was avoided. If the counterfactual cannot be justified, record the cache or deduplication outcome operationally but do not estimate savings.
+Reasons include `cache_hit`, `deduplicated`, `batched`, and `shared_result_reused`. Avoided-usage observations follow the same UTC, idempotency, controlled-dimension, and instrumentation-version rules as actual usage events. `baselineVersion` identifies the deterministic rule used to claim that an operation was avoided. If the counterfactual cannot be justified, record the cache or deduplication outcome operationally but do not estimate savings.
 
 ## 6. Instrumentation boundary and data flow
 
