@@ -2,7 +2,7 @@
 
 FPL Intelligence is a transparent, data-driven decision-support application for engaged Fantasy Premier League managers. The initial product direction is Personalized FPL News Intelligence: connect fresh, permitted evidence to a user's confirmed team context and explain when that evidence changes a decision.
 
-This repository currently contains the production application foundation, a framework-independent domain package for normalized football and user-confirmed TeamState contracts, and a replaceable prototype reference-data adapter backed only by project-authored synthetic fixtures. Product capabilities are delivered separately through approved Linear issues.
+This repository currently contains the production application foundation, a framework-independent domain package for normalized football and user-confirmed TeamState contracts, a replaceable prototype reference-data adapter, and a deterministic expected-points projection baseline. Checked-in football data and projection values are project-authored synthetic fixtures. Product capabilities are delivered separately through approved Linear issues.
 
 ## Sources of truth
 

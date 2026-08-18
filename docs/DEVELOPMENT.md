@@ -78,7 +78,7 @@ Run commands from the repository root unless a troubleshooting step explicitly r
 | `pnpm build`        | Create a production Next.js build.                     |
 | `pnpm check`        | Run the complete local quality gate.                   |
 
-The web workspace also exposes `lint:fix` and `test:watch`. The domain workspace exposes `test:watch` and a synthetic-fixture entry point for focused contract work.
+The web workspace also exposes `lint:fix` and `test:watch`. The domain, adapter, and projection workspaces expose focused test commands; domain, adapter, and projection packages also expose synthetic-fixture entry points for contract work.
 
 ## 6. Environment and secrets
 
