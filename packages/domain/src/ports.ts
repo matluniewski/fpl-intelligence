@@ -4,6 +4,7 @@ import type {
   TeamStateCandidateId,
   TeamStateId,
 } from "./identifiers";
+import type { RawNewsItem } from "./news-intelligence";
 import type { UtcInstant } from "./primitives";
 import type { GameweekId, ReferenceDataSnapshot } from "./reference-data";
 import type { TeamState, TeamStateCandidate } from "./team-state";
@@ -16,6 +17,22 @@ export interface ReferenceDataQuery {
 
 export interface FootballReferenceDataPort {
   loadReferenceData(query: ReferenceDataQuery): Promise<ReferenceDataSnapshot>;
+}
+
+export interface NewsIngestionRequest {
+  readonly requestedAt: UtcInstant;
+  readonly cursor?: string;
+}
+
+export interface NewsIngestionBatch {
+  readonly items: readonly RawNewsItem[];
+  readonly nextCursor?: string;
+  readonly complete: boolean;
+}
+
+/** Permitted source adapters return normalized items, never provider DTOs. */
+export interface NewsSourcePort {
+  loadBatch(request: NewsIngestionRequest): Promise<NewsIngestionBatch>;
 }
 
 export interface ScreenshotCandidateRequest {

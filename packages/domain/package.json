@@ -6,6 +6,7 @@
   "exports": {
     ".": "./src/index.ts",
     "./testing": "./src/testing/synthetic-fixtures.ts",
+    "./testing/news-intelligence": "./src/testing/synthetic-news-intelligence.ts",
     "./testing/recommendation": "./src/testing/synthetic-recommendation.ts"
   },
   "scripts": {

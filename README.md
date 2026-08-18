@@ -22,6 +22,7 @@ Start with:
 - [MVP validation plan](docs/VALIDATION.md)
 - [Screenshot privacy requirements](docs/SCREENSHOT_PRIVACY.md)
 - [News source compliance register](docs/NEWS_SOURCE_COMPLIANCE.md)
+- [News intelligence contracts](docs/NEWS_INTELLIGENCE_CONTRACTS.md)
 
 ## Technology baseline
 
