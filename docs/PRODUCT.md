@@ -121,7 +121,7 @@ The MVP may use deliberately limited, transparent projection and recommendation 
 - Provide manual team entry as a complete, first-class fallback.
 - Collect missing state such as bank, free transfers, available chips, and purchase or selling prices when required by a supported decision.
 - Persist only the confirmed normalized `TeamState` as the durable team source of truth.
-- Treat the source screenshot as ephemeral by default, subject to the detailed privacy decision in FPL-57.
+- Treat the source screenshot as ephemeral by default, subject to the detailed [screenshot and vision import privacy requirements](./SCREENSHOT_PRIVACY.md) owned by FPL-57.
 
 #### B. Squad and watchlist context
 
@@ -457,7 +457,7 @@ FPL-24 and FPL-55 must close or explicitly defer these gaps without silently ove
 
 The screenshot, extracted candidate, confirmed `TeamState`, audit metadata, and operational logs are different data categories.
 
-- The screenshot is ephemeral by default.
+- The screenshot is ephemeral by default under [SCREENSHOT_PRIVACY.md](./SCREENSHOT_PRIVACY.md).
 - It should be deleted after extraction and user confirmation unless a separately approved product reason requires retention.
 - Failed and abandoned flows also require defined deletion behavior.
 - Logs and telemetry must not contain image content or unnecessary personal information.

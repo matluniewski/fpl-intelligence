@@ -409,7 +409,7 @@ The validation can be run with a protected research log rather than production a
 
 ## 13. Privacy, retention, and compliance prerequisites
 
-- FPL-57 defines screenshot upload, processing, abandonment, confirmation, and deletion requirements.
+- FPL-57 defines screenshot upload, processing, abandonment, confirmation, and deletion requirements in [SCREENSHOT_PRIVACY.md](./SCREENSHOT_PRIVACY.md).
 - FPL-44 defines public-beta privacy, terms, retention, analytics, and cookie readiness.
 - FPL-45 determines which `NewsSource` providers and AI-processing paths are permitted.
 - Unknown provider or privacy terms are blockers for the affected data path, not assumptions.
