@@ -1,0 +1,23 @@
+{
+  "name": "fpl-intelligence",
+  "version": "0.0.0",
+  "private": true,
+  "packageManager": "pnpm@10.33.4",
+  "engines": {
+    "node": ">=24.19.0",
+    "pnpm": ">=10.33.4 <11"
+  },
+  "scripts": {
+    "build": "pnpm --filter @fpl-intelligence/web build",
+    "check": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm test && pnpm build",
+    "dev": "pnpm --filter @fpl-intelligence/web dev",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "lint": "pnpm --filter @fpl-intelligence/web lint",
+    "test": "pnpm --filter @fpl-intelligence/web test",
+    "typecheck": "pnpm --filter @fpl-intelligence/web typecheck"
+  },
+  "devDependencies": {
+    "prettier": "^3.6.2"
+  }
+}
