@@ -336,7 +336,7 @@ Operational telemetry exposes counts, freshness, lag, mapping version, categoriz
 ## 13. Downstream implementation obligations
 
 - **FPL-17 — domain contracts:** define provider-independent identities, provenance references, material-input semantics, lifecycle states, and validation invariants before provider adapters.
-- **FPL-16 and FPL-18 — official FPL adapters:** keep DTOs and external IDs within adapter/identity boundaries; return normalized data with provenance and policy references.
+- **FPL-16 reference data and FPL-18 later official integration:** keep DTOs and external IDs within adapter/identity boundaries; return normalized data with provenance and policy references.
 - **FPL-21 — projections:** record versioned material inputs, assumptions, adjustments, uncertainty, and lineage needed for deterministic reproduction.
 - **FPL-22 and FPL-28 through FPL-31 — News Intelligence:** enforce the approved source and external-processor policy, preserve upstream sources and lifecycle state, and keep extraction output distinct from evidence.
 - **Persistence work:** map domain, provenance, lineage, raw/quarantine, lifecycle, and recommendation-history concerns separately; a database record must not become a domain contract.

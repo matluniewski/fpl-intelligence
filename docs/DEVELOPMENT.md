@@ -54,6 +54,7 @@ apps/
   web/                 Next.js App Router application
 packages/
   domain/              Framework-independent domain contracts and invariants
+  adapters/            External/file validation, mapping and adapter boundaries
 docs/                  Product and engineering documentation
   adr/                  Consequential architecture decision records
 ```
