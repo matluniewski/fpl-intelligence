@@ -10,7 +10,7 @@ Last updated: 2026-08-18
 
 This document defines the initial technical boundaries and dependency rules for FPL Intelligence. It is intentionally provider-neutral and deployment-neutral. It describes how future implementation must be shaped; it does not claim that the corresponding capabilities already exist.
 
-The product definition lives in [PRODUCT.md](./PRODUCT.md). Linear owns implementation scope, dependencies, and acceptance criteria. Consequential architecture choices are recorded in [architecture decision records](./adr/README.md) when required.
+The product definition lives in [PRODUCT.md](./PRODUCT.md). The provider-independent origin, lineage, and lifecycle contract for external data lives in [DATA_PROVENANCE.md](./DATA_PROVENANCE.md). Linear owns implementation scope, dependencies, and acceptance criteria. Consequential architecture choices are recorded in [architecture decision records](./adr/README.md) when required.
 
 ## 2. Architectural goals
 
@@ -159,9 +159,12 @@ Persist only data required for an approved purpose and retention window. In part
 - raw screenshots and equivalent artifacts are ephemeral and excluded from backups, logs, analytics, and fixtures;
 - `TeamStateCandidate` and confirmed `TeamState` have different lifecycles;
 - raw news content is not retained by default;
-- provenance, source policy, correction, deletion, expiry, and confidence dimensions remain attached to derived records;
+- raw provider records, normalized data, derived artifacts, and recommendation snapshots remain separate data classes;
+- provenance, source policy, correction, deletion, expiry, and confidence dimensions remain traceable through derived records;
 - logs and metrics use structured, content-free identifiers and categorized errors; and
 - immutable recommendation history is still subject to data minimization and lifecycle rules.
+
+The detailed conceptual provenance contract, lineage rules, provider-replacement boundary, and lifecycle propagation requirements are defined in [DATA_PROVENANCE.md](./DATA_PROVENANCE.md). Their exact persistence schema is intentionally deferred.
 
 PostgreSQL and Drizzle ORM are the planned persistence technologies. Their schema and deployment topology will be introduced by separate issues; this bootstrap chooses no managed database provider.
 
@@ -169,7 +172,7 @@ PostgreSQL and Drizzle ORM are the planned persistence technologies. Their schem
 
 Time-sensitive behavior must receive an explicit clock through a port or function input. Tests must not depend on the machine clock. Store instants in UTC and apply user-facing timezone formatting only at the presentation boundary.
 
-Use stable internal identifiers. Provider identifiers are aliases mapped at adapter boundaries and must not define domain identity. Version mapping, projection, extraction, and rule behavior when it affects reproducibility.
+Use stable internal identifiers. Provider identifiers are aliases mapped at adapter boundaries and must not define domain identity. Version mapping, projection, extraction, and rule behavior when it affects reproducibility. Normalized material inputs cross the boundary with provenance references; derived artifacts retain lineage to those inputs rather than copying provider DTOs.
 
 For identical normalized inputs, clock value, configuration, and algorithm version, deterministic modules must return the same result and ordered alternatives. Tie-breaking rules must be explicit and tested.
 
