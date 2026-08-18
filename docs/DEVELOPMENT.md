@@ -144,3 +144,35 @@ Then review:
 - whether a consequential decision needs an ADR.
 
 Then follow the draft pull request, CI, review, approval, merge, and Linear synchronization stages in [AGENT_WORKFLOW.md](./AGENT_WORKFLOW.md).
+
+## 11. Continuous integration
+
+The [`CI` workflow](../.github/workflows/ci.yml) runs for every pull request targeting `main` and for pushes to `main`. It uses the versions pinned by `.node-version`, `package.json#packageManager`, and `pnpm-lock.yaml`.
+
+The workflow exposes five independent checks so a failure identifies the affected quality boundary:
+
+| Displayed check  | Command             |
+| ---------------- | ------------------- |
+| `CI / Format`    | `pnpm format:check` |
+| `CI / Lint`      | `pnpm lint`         |
+| `CI / Typecheck` | `pnpm typecheck`    |
+| `CI / Test`      | `pnpm test`         |
+| `CI / Build`     | `pnpm build`        |
+
+Each job installs dependencies with `pnpm install --frozen-lockfile`, uses a lockfile-keyed pnpm store cache, has read-only repository permissions, and runs independently with a bounded timeout. Third-party and GitHub-maintained actions are pinned to immutable commit SHAs with their release tags recorded in comments. The workflow deliberately uses `pull_request`, not `pull_request_target`, and receives no project secrets.
+
+### Required `main` protection
+
+Configure a GitHub branch ruleset or classic branch protection for `main` after the first successful workflow run makes the check names selectable:
+
+1. Require changes to arrive through a pull request.
+2. Require branches to be up to date before merging.
+3. Require `CI / Format`, `CI / Lint`, `CI / Typecheck`, `CI / Test`, and `CI / Build` to pass.
+4. Keep `GitGuardian Security Checks` required while that repository integration is enabled.
+5. Require all review conversations to be resolved.
+6. Block force pushes and branch deletion.
+7. Do not permit a failing, skipped, pending, or stale required check to be bypassed during routine delivery.
+
+The current single-maintainer phase does not require an approving GitHub review because a pull request author cannot approve their own change. The explicit human merge-approval gate in [AGENT_WORKFLOW.md](./AGENT_WORKFLOW.md) remains mandatory. Add an independent required approval when a second eligible reviewer is available.
+
+If repository permissions or plan limitations prevent applying these settings through the API, configure them manually in **Settings → Rules → Rulesets** and verify them with a test pull request. Treat any temporary absence of branch protection as a visible repository risk, not as permission to skip the documented checks or human merge approval.
