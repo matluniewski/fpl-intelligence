@@ -411,7 +411,7 @@ The validation can be run with a protected research log rather than production a
 
 - FPL-57 defines screenshot upload, processing, abandonment, confirmation, and deletion requirements in [SCREENSHOT_PRIVACY.md](./SCREENSHOT_PRIVACY.md).
 - FPL-44 defines public-beta privacy, terms, retention, analytics, and cookie readiness.
-- FPL-45 determines which `NewsSource` providers and AI-processing paths are permitted.
+- FPL-45 determines which `NewsSource` providers and AI-processing paths are permitted in [NEWS_SOURCE_COMPLIANCE.md](./NEWS_SOURCE_COMPLIANCE.md). The initial allowlist contains no live third-party source.
 - Unknown provider or privacy terms are blockers for the affected data path, not assumptions.
 - Consent language must distinguish product research from public product operation.
 - Research logs must exclude image content, credentials, and unnecessary personal information.
