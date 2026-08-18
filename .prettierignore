@@ -1,0 +1,13 @@
+.next
+.pnpm-store
+coverage
+node_modules
+pnpm-lock.yaml
+playwright-report
+test-results
+
+# Existing product/compliance baselines retain their established formatting.
+docs/NEWS_SOURCE_COMPLIANCE.md
+docs/PRODUCT.md
+docs/SCREENSHOT_PRIVACY.md
+docs/VALIDATION.md
