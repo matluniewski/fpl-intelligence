@@ -1,4 +1,6 @@
 export * from "./identifiers";
+export * from "./news-intelligence";
+export * from "./news-intelligence-factory";
 export * from "./ports";
 export * from "./primitives";
 export * from "./provenance";

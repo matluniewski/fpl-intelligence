@@ -17,6 +17,11 @@ export type SourceId = Identifier<"SourceId">;
 export type ProviderId = Identifier<"ProviderId">;
 export type SourcePolicyId = Identifier<"SourcePolicyId">;
 export type EphemeralArtifactId = Identifier<"EphemeralArtifactId">;
+export type RawNewsItemId = Identifier<"RawNewsItemId">;
+export type ClaimId = Identifier<"ClaimId">;
+export type EvidenceId = Identifier<"EvidenceId">;
+export type NewsSignalId = Identifier<"NewsSignalId">;
+export type PlayerAvailabilityStateId = Identifier<"PlayerAvailabilityStateId">;
 
 function createIdentifier<Kind extends string>(
   value: string,
@@ -58,3 +63,15 @@ export const createSourcePolicyId = (value: string): SourcePolicyId =>
   createIdentifier(value, "SourcePolicyId");
 export const createEphemeralArtifactId = (value: string): EphemeralArtifactId =>
   createIdentifier(value, "EphemeralArtifactId");
+export const createRawNewsItemId = (value: string): RawNewsItemId =>
+  createIdentifier(value, "RawNewsItemId");
+export const createClaimId = (value: string): ClaimId =>
+  createIdentifier(value, "ClaimId");
+export const createEvidenceId = (value: string): EvidenceId =>
+  createIdentifier(value, "EvidenceId");
+export const createNewsSignalId = (value: string): NewsSignalId =>
+  createIdentifier(value, "NewsSignalId");
+export const createPlayerAvailabilityStateId = (
+  value: string,
+): PlayerAvailabilityStateId =>
+  createIdentifier(value, "PlayerAvailabilityStateId");
