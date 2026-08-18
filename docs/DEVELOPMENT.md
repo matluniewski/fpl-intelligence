@@ -52,7 +52,8 @@ This is a local performance option, not a committed runtime or deployment depend
 ```text
 apps/
   web/                 Next.js App Router application
-packages/              Reserved for framework-independent packages
+packages/
+  domain/              Framework-independent domain contracts and invariants
 docs/                  Product and engineering documentation
   adr/                  Consequential architecture decision records
 ```
@@ -70,13 +71,13 @@ Run commands from the repository root unless a troubleshooting step explicitly r
 | `pnpm dev`          | Start the web development server.                      |
 | `pnpm format`       | Apply Prettier formatting.                             |
 | `pnpm format:check` | Verify formatting without changing files.              |
-| `pnpm lint`         | Run ESLint with the Next.js and TypeScript rules.      |
+| `pnpm lint`         | Run workspace-specific ESLint and TypeScript rules.    |
 | `pnpm typecheck`    | Run strict TypeScript checking without emitting files. |
 | `pnpm test`         | Run deterministic Vitest unit tests once.              |
 | `pnpm build`        | Create a production Next.js build.                     |
 | `pnpm check`        | Run the complete local quality gate.                   |
 
-The application workspace also exposes `lint:fix` and `test:watch` for focused local work.
+The web workspace also exposes `lint:fix` and `test:watch`. The domain workspace exposes `test:watch` and a synthetic-fixture entry point for focused contract work.
 
 ## 6. Environment and secrets
 

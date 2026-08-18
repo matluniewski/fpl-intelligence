@@ -210,4 +210,12 @@ FPL-13 establishes:
 - ESLint, Prettier, and Vitest quality tooling; and
 - version-controlled product, development, and architecture documentation.
 
-It does not implement team import, data ingestion, persistence, projections, optimization, news processing, authentication, account actions, or provider integrations.
+FPL-17 adds the framework-independent `@fpl-intelligence/domain` package with:
+
+- normalized football reference, rules, provenance, and TeamState contracts;
+- an explicitly provisional `TeamStateCandidate` model with per-field origin and confidence;
+- deterministic candidate validation and explicit confirmation into `TeamState`;
+- provider-independent reference-data, vision-import, candidate-import, and storage ports; and
+- synthetic fixtures for adapter contract tests.
+
+The package parameterizes versioned FPL rules rather than claiming that test values describe a current season. It does not implement team import adapters, provider access, persistence, projections, optimization, news processing, authentication, account actions, or UI.
