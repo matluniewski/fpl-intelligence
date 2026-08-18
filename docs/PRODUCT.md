@@ -471,7 +471,8 @@ The screenshot, extracted candidate, confirmed `TeamState`, audit metadata, and 
 - X access uses only an official or otherwise explicitly permitted method; no scraping fallback is allowed.
 - Raw external content is retained only where necessary and permitted.
 - Unresolved permissions disable that source rather than being treated as consent.
-- FPL-45 owns the provider compliance review; engineering documentation must not claim a legal conclusion.
+- FPL-45 owns the detailed [News Source Compliance Register](./NEWS_SOURCE_COMPLIANCE.md); engineering documentation must not claim a legal conclusion.
+- The initial FPL-22 allowlist is limited to synthetic fixtures and tightly controlled first-party or expressly licensed research items. No live third-party source is currently approved.
 
 ### FPL and football data
 
