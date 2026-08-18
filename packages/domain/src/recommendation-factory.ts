@@ -609,13 +609,14 @@ function validateOption(
   if (
     !isNonEmpty(explanation.summaryCode) ||
     explanation.reasonCodes.length === 0 ||
+    explanation.supportingEvidenceRefs.length === 0 ||
     explanation.materialChangeTriggers.length === 0
   ) {
     addIssue(
       issues,
       "empty_value",
       `${path}.explanation`,
-      "Explanation needs a summary, reasons, and at least one material change trigger.",
+      "Explanation needs a summary, reasons, supporting evidence, and at least one material change trigger.",
     );
   }
   validateExplanationCodeRefs(
@@ -761,12 +762,12 @@ export function validateRecommendationInput(
         "Confidence dimension must be recognized by the contract version.",
       );
     }
-    if (!CONFIDENCE_BANDS.includes(factor.band)) {
+    if (!CONFIDENCE_BANDS.includes(factor.confidenceBand)) {
       addIssue(
         issues,
         "confidence_invalid",
-        `${path}.band`,
-        "Confidence band must be not_assessed, low, medium, or high.",
+        `${path}.confidenceBand`,
+        "Confidence contribution band must be not_assessed, low, medium, or high.",
       );
     }
     if (!isNonEmpty(factor.rationaleCode)) {
@@ -775,6 +776,14 @@ export function validateRecommendationInput(
         "empty_value",
         `${path}.rationaleCode`,
         "Confidence factor rationale code must not be empty.",
+      );
+    }
+    if (factor.evidenceRefs.length === 0) {
+      addIssue(
+        issues,
+        "confidence_invalid",
+        `${path}.evidenceRefs`,
+        "Every confidence factor must retain at least one evidence reference.",
       );
     }
     validateEvidenceRefs(
@@ -897,8 +906,8 @@ export function createRecommendation(
   const primary = ranked[0]!;
   const confidenceBand = input.confidence.factors.reduce(
     (lowest, factor) =>
-      CONFIDENCE_ORDER[factor.band] < CONFIDENCE_ORDER[lowest]
-        ? factor.band
+      CONFIDENCE_ORDER[factor.confidenceBand] < CONFIDENCE_ORDER[lowest]
+        ? factor.confidenceBand
         : lowest,
     "high" as RecommendationConfidenceBand,
   );

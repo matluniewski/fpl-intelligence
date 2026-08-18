@@ -253,19 +253,19 @@ export function createSyntheticRecommendationInput(): CreateRecommendationInput 
       factors: Object.freeze([
         Object.freeze({
           dimension: "projection_uncertainty" as const,
-          band: "high" as const,
+          confidenceBand: "high" as const,
           rationaleCode: "synthetic_projection_stable",
           evidenceRefs: Object.freeze([SYNTHETIC_PROJECTION_EVIDENCE_ID]),
         }),
         Object.freeze({
           dimension: "data_freshness" as const,
-          band: "high" as const,
+          confidenceBand: "high" as const,
           rationaleCode: "synthetic_inputs_current",
           evidenceRefs: Object.freeze([SYNTHETIC_PROJECTION_EVIDENCE_ID]),
         }),
         Object.freeze({
           dimension: "news_signal" as const,
-          band: "low" as const,
+          confidenceBand: "low" as const,
           rationaleCode: "synthetic_news_conflict",
           evidenceRefs: Object.freeze([
             SYNTHETIC_NEWS_SUPPORT_EVIDENCE_ID,
@@ -274,7 +274,7 @@ export function createSyntheticRecommendationInput(): CreateRecommendationInput 
         }),
         Object.freeze({
           dimension: "scenario_sensitivity" as const,
-          band: "medium" as const,
+          confidenceBand: "medium" as const,
           rationaleCode: "synthetic_option_sensitive_to_minutes",
           evidenceRefs: Object.freeze([SYNTHETIC_PROJECTION_EVIDENCE_ID]),
         }),

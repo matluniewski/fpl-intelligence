@@ -169,7 +169,8 @@ export type RecommendationConfidenceBand =
 
 export interface RecommendationConfidenceFactor {
   readonly dimension: RecommendationConfidenceDimension;
-  readonly band: RecommendationConfidenceBand;
+  /** Higher always means stronger support for the recommendation. */
+  readonly confidenceBand: RecommendationConfidenceBand;
   readonly rationaleCode: string;
   readonly evidenceRefs: readonly RecommendationEvidenceId[];
 }

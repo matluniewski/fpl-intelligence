@@ -50,7 +50,7 @@ These are contract-level consistency checks, not a complete optimizer or live-se
 
 ## Confidence and uncertainty
 
-Confidence is an explainable assessment, not an opaque probability. Each factor has a recognized dimension, an ordinal band, a rationale code, and evidence references. The initial aggregate methodology is deliberately conservative: overall confidence is the lowest factor band.
+Confidence is an explainable assessment, not an opaque probability. Each factor has a recognized dimension, an ordinal `confidenceBand`, a rationale code, and evidence references. The band is always positively oriented: a higher band means that the assessed dimension provides stronger support for the recommendation. For example, `high` for `projection_uncertainty` means the evaluated uncertainty is low enough to support high confidence; it never means "high uncertainty." The initial aggregate methodology is deliberately conservative: overall confidence is the lowest factor confidence band.
 
 Projection uncertainty, freshness, news signals, evidence conflict, and scenario sensitivity remain separate dimensions. Conflicting evidence is retained with explicit `supports`, `contradicts`, or `context` stances and an optional conflict group. The contract does not silently select one conflicting item as truth.
 

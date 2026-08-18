@@ -94,6 +94,9 @@ describe("shared recommendation contract", () => {
       "scenario_sensitivity",
     ]);
     expect(
+      recommendation.confidence.factors.map((factor) => factor.confidenceBand),
+    ).toEqual(["high", "high", "low", "medium"]);
+    expect(
       recommendation.confidence.factors.every((factor) =>
         factor.rationaleCode.startsWith("synthetic_"),
       ),
@@ -325,6 +328,44 @@ describe("shared recommendation contract", () => {
       },
       "reference_missing",
       "options[0].explanation.supportingEvidenceRefs[0]",
+    );
+  });
+
+  it("requires supporting evidence for every recommendation option", () => {
+    const input = createSyntheticRecommendationInput();
+    expectIssue(
+      {
+        ...input,
+        options: [
+          {
+            ...SYNTHETIC_TRANSFER_OPTION,
+            explanation: {
+              ...SYNTHETIC_TRANSFER_OPTION.explanation,
+              supportingEvidenceRefs: [],
+            },
+          },
+          SYNTHETIC_ROLL_OPTION,
+        ],
+      },
+      "empty_value",
+      "options[0].explanation",
+    );
+  });
+
+  it("requires evidence for every confidence contribution", () => {
+    const input = createSyntheticRecommendationInput();
+    expectIssue(
+      {
+        ...input,
+        confidence: {
+          ...input.confidence,
+          factors: input.confidence.factors.map((factor, index) =>
+            index === 0 ? { ...factor, evidenceRefs: [] } : factor,
+          ),
+        },
+      },
+      "confidence_invalid",
+      "confidence.factors[0].evidenceRefs",
     );
   });
 
