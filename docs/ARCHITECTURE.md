@@ -166,7 +166,7 @@ Persist only data required for an approved purpose and retention window. In part
 
 The detailed conceptual provenance contract, lineage rules, provider-replacement boundary, and lifecycle propagation requirements are defined in [DATA_PROVENANCE.md](./DATA_PROVENANCE.md). Their exact persistence schema is intentionally deferred.
 
-PostgreSQL and Drizzle ORM are the planned persistence technologies. Their schema and deployment topology will be introduced by separate issues; this bootstrap chooses no managed database provider.
+PostgreSQL and Drizzle ORM provide the provider-neutral persistence foundation. The current migration reserves the application-owned `fpl_intelligence` schema without defining product or provider tables. Persistence records remain separate from domain contracts, and no managed database provider or deployment topology has been selected.
 
 ## 8. Time, identity, and determinism
 

@@ -4,7 +4,7 @@ Status: initial engineering baseline
 
 Owner: FPL-13
 
-Last updated: 2026-08-18
+Last updated: 2026-08-19
 
 ## 1. Purpose
 
@@ -15,6 +15,7 @@ This guide defines the reproducible local-development baseline for FPL Intellige
 - Git
 - Node.js 24.19.0 or newer within the Node.js 24 LTS line
 - pnpm 10.33.4
+- Docker Desktop or another Docker Compose-compatible runtime for database work
 
 The repository records the Node baseline in `.node-version`, the pnpm version in `package.json`, and both minimum versions in `package.json#engines`.
 
@@ -55,6 +56,7 @@ apps/
 packages/
   domain/              Framework-independent domain contracts and invariants
   adapters/            External/file validation, mapping and adapter boundaries
+  database/            Provider-neutral PostgreSQL and Drizzle infrastructure
 docs/                  Product and engineering documentation
   adr/                  Consequential architecture decision records
 ```
@@ -77,12 +79,18 @@ Run commands from the repository root unless a troubleshooting step explicitly r
 | `pnpm test`         | Run deterministic Vitest unit tests once.              |
 | `pnpm build`        | Create a production Next.js build.                     |
 | `pnpm check`        | Run the complete local quality gate.                   |
+| `pnpm db:up`        | Start the local PostgreSQL container.                  |
+| `pnpm db:migrate`   | Apply version-controlled Drizzle migrations.           |
+| `pnpm db:test`      | Run the PostgreSQL connection smoke test.              |
+| `pnpm db:down`      | Stop the local PostgreSQL container.                   |
 
 The web workspace also exposes `lint:fix` and `test:watch`. The domain, adapter, and projection workspaces expose focused test commands; domain, adapter, and projection packages also expose synthetic-fixture entry points for contract work.
 
 ## 6. Environment and secrets
 
-The bootstrap has no runtime environment variables. Future configuration must follow these rules:
+The web bootstrap has no runtime environment variables. Local database commands use the non-production placeholders documented in `.env.example`; copy them to the ignored `.env.local` file before running migrations or integration tests.
+
+All configuration must follow these rules:
 
 1. Add a non-secret, documented placeholder to `.env.example`.
 2. Keep local values in `.env.local`, which is ignored by Git.
@@ -151,15 +159,16 @@ Then follow the draft pull request, CI, review, approval, merge, and Linear sync
 
 The [`CI` workflow](../.github/workflows/ci.yml) runs for every pull request targeting `main` and for pushes to `main`. It uses the versions pinned by `.node-version`, `package.json#packageManager`, and `pnpm-lock.yaml`.
 
-The workflow exposes five independent checks so a failure identifies the affected quality boundary:
+The workflow exposes six independent checks so a failure identifies the affected quality boundary:
 
-| Displayed check  | Command             |
-| ---------------- | ------------------- |
-| `CI / Format`    | `pnpm format:check` |
-| `CI / Lint`      | `pnpm lint`         |
-| `CI / Typecheck` | `pnpm typecheck`    |
-| `CI / Test`      | `pnpm test`         |
-| `CI / Build`     | `pnpm build`        |
+| Displayed check  | Command                           |
+| ---------------- | --------------------------------- |
+| `CI / Format`    | `pnpm format:check`               |
+| `CI / Lint`      | `pnpm lint`                       |
+| `CI / Typecheck` | `pnpm typecheck`                  |
+| `CI / Test`      | `pnpm test`                       |
+| `CI / Build`     | `pnpm build`                      |
+| `CI / Database`  | `pnpm db:migrate && pnpm db:test` |
 
 Each job installs dependencies with `pnpm install --frozen-lockfile`, uses a lockfile-keyed pnpm store cache, has read-only repository permissions, and runs independently with a bounded timeout. Third-party and GitHub-maintained actions are pinned to immutable commit SHAs with their release tags recorded in comments. The workflow deliberately uses `pull_request`, not `pull_request_target`, and receives no project secrets.
 
@@ -169,7 +178,7 @@ Configure a GitHub branch ruleset or classic branch protection for `main` after 
 
 1. Require changes to arrive through a pull request.
 2. Require branches to be up to date before merging.
-3. Require `CI / Format`, `CI / Lint`, `CI / Typecheck`, `CI / Test`, and `CI / Build` to pass.
+3. Require `CI / Format`, `CI / Lint`, `CI / Typecheck`, `CI / Test`, `CI / Build`, and `CI / Database` to pass.
 4. Keep `GitGuardian Security Checks` required while that repository integration is enabled.
 5. Require all review conversations to be resolved.
 6. Block force pushes and branch deletion.

@@ -1,0 +1,23 @@
+name: fpl-intelligence
+
+services:
+  postgres:
+    image: postgres:18.4-alpine
+    environment:
+      POSTGRES_DB: fpl_intelligence
+      POSTGRES_USER: fpl_intelligence
+      POSTGRES_PASSWORD: local_development_only
+    ports:
+      - "127.0.0.1:${FPL_POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - fpl_postgres_data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U fpl_intelligence -d fpl_intelligence"]
+      interval: 2s
+      timeout: 5s
+      retries: 15
+      start_period: 5s
+    restart: unless-stopped
+
+volumes:
+  fpl_postgres_data:

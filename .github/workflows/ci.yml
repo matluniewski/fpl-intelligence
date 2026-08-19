@@ -125,3 +125,46 @@ jobs:
         run: pnpm install --frozen-lockfile
       - name: Build production application
         run: pnpm build
+
+  database:
+    name: Database
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    services:
+      postgres:
+        image: postgres:18.4-alpine
+        env:
+          POSTGRES_DB: fpl_intelligence
+          POSTGRES_USER: fpl_intelligence
+          POSTGRES_PASSWORD: ci_only_not_a_secret
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U fpl_intelligence -d fpl_intelligence"
+          --health-interval 2s
+          --health-timeout 5s
+          --health-retries 15
+    env:
+      DATABASE_URL: postgresql://fpl_intelligence:ci_only_not_a_secret@127.0.0.1:5432/fpl_intelligence
+      DATABASE_POOL_MAX: 2
+      DATABASE_CONNECT_TIMEOUT_SECONDS: 5
+      DATABASE_IDLE_TIMEOUT_SECONDS: 5
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Install pnpm
+        uses: pnpm/action-setup@0977fd99725f1db4007ccb2928dbb4e90d06cc86 # v6.0.10
+      - name: Set up Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version-file: .node-version
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Apply database migrations
+        run: pnpm db:migrate
+      - name: Run database integration tests
+        run: pnpm db:test

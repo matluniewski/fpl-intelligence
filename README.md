@@ -31,9 +31,11 @@ Start with:
 - TypeScript
 - Next.js App Router and React
 - Tailwind CSS and shadcn/ui
+- PostgreSQL and Drizzle ORM
 - Vitest
+- GitHub Actions
 
-PostgreSQL, Drizzle ORM, Playwright, and GitHub Actions remain part of the planned stack and will be introduced by their owning issues. No hosting, database service, authentication, analytics, vision, LLM, news, or football-data provider is selected by this bootstrap.
+Playwright remains part of the planned stack and will be introduced by its owning issue. The PostgreSQL foundation is local and provider-neutral; no hosting, managed database, authentication, analytics, vision, LLM, news, or football-data provider has been selected.
 
 ## Getting started
 
@@ -41,6 +43,7 @@ Prerequisites:
 
 - Node.js 24.19.0 or newer within the Node.js 24 LTS line
 - pnpm 10.33.4
+- Docker Desktop or another Docker Compose-compatible runtime for database work
 
 ```bash
 corepack enable
@@ -50,7 +53,17 @@ pnpm dev
 
 Open <http://localhost:3000>.
 
-The repository currently requires no runtime environment variables. When configuration is introduced, copy `.env.example` to `.env.local` and provide only the values documented by the owning issue.
+The web application currently requires no runtime environment variables. Database commands require the documented local-only values:
+
+```bash
+Copy-Item .env.example .env.local # Windows PowerShell
+pnpm db:up
+pnpm db:migrate
+pnpm db:test
+pnpm db:down
+```
+
+On Unix-like systems, use `cp .env.example .env.local`. Never commit `.env.local` or real credentials.
 
 ## Quality commands
 
