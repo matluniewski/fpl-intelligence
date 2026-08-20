@@ -5,6 +5,7 @@ export * from "./first-party-research-news-source-adapter";
 export * from "./in-memory-news-store";
 export * from "./news-ingestion-contracts";
 export * from "./news-ingestion-errors";
+export * from "./news-deduplication";
 export * from "./prototype-reference-data-adapter";
 export * from "./reference-data-contracts";
 export * from "./reference-data-errors";
