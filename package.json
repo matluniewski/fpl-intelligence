@@ -8,7 +8,7 @@
     "pnpm": ">=10.33.4 <11"
   },
   "scripts": {
-    "build": "pnpm --filter @fpl-intelligence/domain --filter @fpl-intelligence/adapters --filter @fpl-intelligence/database --filter @fpl-intelligence/projection --filter @fpl-intelligence/web build",
+    "build": "pnpm --workspace-concurrency=1 --filter @fpl-intelligence/domain --filter @fpl-intelligence/adapters --filter @fpl-intelligence/database --filter @fpl-intelligence/projection --filter @fpl-intelligence/web build",
     "check": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm test && pnpm build",
     "dev": "pnpm --filter @fpl-intelligence/web dev",
     "db:down": "docker compose down",
@@ -17,9 +17,9 @@
     "db:up": "docker compose up -d postgres",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "lint": "pnpm --filter @fpl-intelligence/domain --filter @fpl-intelligence/adapters --filter @fpl-intelligence/database --filter @fpl-intelligence/projection --filter @fpl-intelligence/web lint",
-    "test": "pnpm --filter @fpl-intelligence/domain test && pnpm --filter @fpl-intelligence/adapters test && pnpm --filter @fpl-intelligence/database test && pnpm --filter @fpl-intelligence/projection test && pnpm --filter @fpl-intelligence/web test",
-    "typecheck": "pnpm --filter @fpl-intelligence/domain --filter @fpl-intelligence/adapters --filter @fpl-intelligence/database --filter @fpl-intelligence/projection --filter @fpl-intelligence/web typecheck"
+    "lint": "pnpm --workspace-concurrency=1 --filter @fpl-intelligence/domain --filter @fpl-intelligence/adapters --filter @fpl-intelligence/database --filter @fpl-intelligence/projection --filter @fpl-intelligence/web lint",
+    "test": "pnpm --workspace-concurrency=1 --filter @fpl-intelligence/domain test && pnpm --workspace-concurrency=1 --filter @fpl-intelligence/adapters test && pnpm --workspace-concurrency=1 --filter @fpl-intelligence/database test && pnpm --workspace-concurrency=1 --filter @fpl-intelligence/projection test && pnpm --workspace-concurrency=1 --filter @fpl-intelligence/web test",
+    "typecheck": "pnpm --workspace-concurrency=1 --filter @fpl-intelligence/domain --filter @fpl-intelligence/adapters --filter @fpl-intelligence/database --filter @fpl-intelligence/projection --filter @fpl-intelligence/web typecheck"
   },
   "devDependencies": {
     "prettier": "^3.6.2"
