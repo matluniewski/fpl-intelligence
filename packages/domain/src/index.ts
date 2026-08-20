@@ -7,4 +7,5 @@ export * from "./provenance";
 export * from "./recommendation";
 export * from "./recommendation-factory";
 export * from "./reference-data";
+export * from "./source-reputation";
 export * from "./team-state";

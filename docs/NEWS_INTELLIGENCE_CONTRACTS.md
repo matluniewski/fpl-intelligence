@@ -42,6 +42,10 @@ Directness distinguishes explicit quote, direct report, inference, and speculati
 
 Evidence relates a Claim to permitted source metadata. It records supporting, contradicting, or contextual stance; observation, ingestion, and assessment times; source context; provenance; and lifecycle state. The contract stores reference or quote metadata, not raw news content. Contradictory Evidence remains as separate records until a versioned deterministic rule evaluates it.
 
+## Source reputation
+
+`SourceReputationCatalog` holds manually reviewed, versioned source tiers for a declared context. Its deterministic assessment retains the matched context, rationale, catalog version, and review time; an unknown source or context mismatch gets a conservative fallback. Source reputation remains separate from claim certainty, directness, corroboration, and final `NewsSignal` confidence. It does not learn from historical outcomes or infer authority from repetition.
+
 ## NewsSignal
 
 `NewsSignal` is a decision-relevant Evidence Engine result at an explicit evaluation time. It includes availability state, confidence band, freshness, conflict state, effective window, rule identity, reason codes, Claim references, Evidence references, and provenance.
