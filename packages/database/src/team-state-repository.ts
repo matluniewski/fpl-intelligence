@@ -1,10 +1,11 @@
 import { createHash } from "node:crypto";
-import { desc, eq, lte } from "drizzle-orm";
+import { desc, eq, lte, sql } from "drizzle-orm";
 import type {
   TeamState,
   TeamStateCandidate,
   TeamStateCandidateId,
   TeamStateCandidateStore,
+  TeamStateConfirmationStore,
   TeamStateId,
   TeamStateStore,
   UtcInstant,
@@ -56,6 +57,7 @@ export interface TeamStateCandidateRepository extends TeamStateCandidateStore {
 export interface TeamStatePersistenceRepository {
   readonly candidates: TeamStateCandidateRepository;
   readonly teamStates: TeamStateStore;
+  readonly confirmations: TeamStateConfirmationStore;
 }
 
 export class TeamStateConflictError extends Error {
@@ -67,14 +69,45 @@ export class TeamStateConflictError extends Error {
   }
 }
 
+export class TeamStateCandidateConflictError extends Error {
+  readonly code = "team_state_candidate_conflict" as const;
+
+  constructor(readonly candidateId: TeamStateCandidateId) {
+    super(`TeamState candidate ${candidateId} already has different content.`);
+    this.name = "TeamStateCandidateConflictError";
+  }
+}
+
 export function createTeamStatePersistenceRepository(
   db: Database,
 ): TeamStatePersistenceRepository {
   const candidates: TeamStateCandidateRepository = {
     async save(candidate: TeamStateCandidate) {
-      await db
-        .insert(teamStateCandidates)
-        .values({
+      await db.transaction(async (transaction) => {
+        await transaction.execute(
+          sql`select pg_advisory_xact_lock(hashtextextended(${candidate.id}, 0))`,
+        );
+        const [confirmedState] = await transaction
+          .select({ teamStateId: teamStates.teamStateId })
+          .from(teamStates)
+          .where(eq(teamStates.candidateId, candidate.id))
+          .limit(1);
+        if (confirmedState !== undefined) {
+          throw new Error(
+            "A confirmed TeamState already consumed this candidate.",
+          );
+        }
+        const [existing] = await transaction
+          .select({ candidate: teamStateCandidates.candidate })
+          .from(teamStateCandidates)
+          .where(eq(teamStateCandidates.candidateId, candidate.id))
+          .limit(1);
+        if (existing !== undefined) {
+          if (fingerprint(existing.candidate) === fingerprint(candidate))
+            return;
+          throw new TeamStateCandidateConflictError(candidate.id);
+        }
+        await transaction.insert(teamStateCandidates).values({
           candidateId: candidate.id,
           createdAt: new Date(candidate.createdAt),
           updatedAt: new Date(candidate.updatedAt),
@@ -82,17 +115,38 @@ export function createTeamStatePersistenceRepository(
             new Date(candidate.updatedAt).getTime() + CANDIDATE_RETENTION_MS,
           ),
           candidate,
-        })
-        .onConflictDoUpdate({
-          target: teamStateCandidates.candidateId,
-          set: {
+        });
+      });
+    },
+    async replace(candidate, expectedCandidate) {
+      return db.transaction(async (transaction) => {
+        await transaction.execute(
+          sql`select pg_advisory_xact_lock(hashtextextended(${candidate.id}, 0))`,
+        );
+        const [current] = await transaction
+          .select({ candidate: teamStateCandidates.candidate })
+          .from(teamStateCandidates)
+          .where(eq(teamStateCandidates.candidateId, candidate.id))
+          .limit(1);
+        if (
+          current === undefined ||
+          fingerprint(current.candidate) !== fingerprint(expectedCandidate)
+        ) {
+          return false;
+        }
+        const updated = await transaction
+          .update(teamStateCandidates)
+          .set({
             updatedAt: new Date(candidate.updatedAt),
             retainUntil: new Date(
               new Date(candidate.updatedAt).getTime() + CANDIDATE_RETENTION_MS,
             ),
             candidate,
-          },
-        });
+          })
+          .where(eq(teamStateCandidates.candidateId, candidate.id))
+          .returning({ candidateId: teamStateCandidates.candidateId });
+        return updated.length === 1;
+      });
     },
     async getById(id: TeamStateCandidateId) {
       const [row] = await db
@@ -175,8 +229,76 @@ export function createTeamStatePersistenceRepository(
         : teamStateFromRow(row.teamState, row.teamStateId);
     },
   };
+  const confirmations: TeamStateConfirmationStore = {
+    async saveConfirmedAndConsumeCandidate(
+      teamState: TeamState,
+      expectedCandidate: TeamStateCandidate,
+    ) {
+      return db.transaction(async (transaction) => {
+        await transaction.execute(
+          sql`select pg_advisory_xact_lock(hashtextextended(${teamState.candidateId}, 0))`,
+        );
+        const [candidateToConsume] = await transaction
+          .select({ candidate: teamStateCandidates.candidate })
+          .from(teamStateCandidates)
+          .where(eq(teamStateCandidates.candidateId, teamState.candidateId))
+          .for("update")
+          .limit(1);
+
+        if (candidateToConsume === undefined) {
+          const [existing] = await transaction
+            .select({ teamState: teamStates.teamState })
+            .from(teamStates)
+            .where(eq(teamStates.candidateId, teamState.candidateId))
+            .limit(1);
+          return existing !== undefined &&
+            fingerprint(existing.teamState) === fingerprint(teamState)
+            ? "confirmed"
+            : "candidate_not_available";
+        }
+        if (
+          fingerprint(candidateToConsume.candidate) !==
+          fingerprint(expectedCandidate)
+        ) {
+          return "candidate_not_available";
+        }
+
+        await transaction
+          .delete(teamStateCandidates)
+          .where(eq(teamStateCandidates.candidateId, teamState.candidateId));
+
+        const inserted = await transaction
+          .insert(teamStates)
+          .values({
+            teamStateId: teamState.id,
+            candidateId: teamState.candidateId,
+            gameweekSeasonId: teamState.gameweekId.seasonId,
+            gameweekNumber: teamState.gameweekId.number,
+            confirmedAt: new Date(teamState.confirmedAt),
+            teamState,
+          })
+          .onConflictDoNothing({ target: teamStates.teamStateId })
+          .returning({ teamStateId: teamStates.teamStateId });
+        if (inserted.length !== 0) return "confirmed";
+
+        const [existing] = await transaction
+          .select({ teamState: teamStates.teamState })
+          .from(teamStates)
+          .where(eq(teamStates.teamStateId, teamState.id))
+          .limit(1);
+        if (
+          existing === undefined ||
+          fingerprint(existing.teamState) !== fingerprint(teamState)
+        ) {
+          throw new TeamStateConflictError(teamState.id);
+        }
+        return "confirmed";
+      });
+    },
+  };
   return Object.freeze({
     candidates: Object.freeze(candidates),
     teamStates: Object.freeze(confirmed),
+    confirmations: Object.freeze(confirmations),
   });
 }

@@ -57,6 +57,10 @@ export interface TeamStateCandidateImportPort<TRequest> {
 
 export interface TeamStateCandidateStore {
   save(candidate: TeamStateCandidate): Promise<void>;
+  replace(
+    candidate: TeamStateCandidate,
+    expectedCandidate: TeamStateCandidate,
+  ): Promise<boolean>;
   getById(id: TeamStateCandidateId): Promise<TeamStateCandidate | null>;
   delete(id: TeamStateCandidateId): Promise<void>;
 }
@@ -65,4 +69,15 @@ export interface TeamStateStore {
   saveConfirmed(teamState: TeamState): Promise<void>;
   getById(id: TeamStateId): Promise<TeamState | null>;
   getLatest(): Promise<TeamState | null>;
+}
+
+export interface TeamStateConfirmationStore {
+  /**
+   * Persists the confirmed state and consumes its provisional candidate as one
+   * atomic operation. A retry with identical state is idempotent.
+   */
+  saveConfirmedAndConsumeCandidate(
+    teamState: TeamState,
+    expectedCandidate: TeamStateCandidate,
+  ): Promise<"confirmed" | "candidate_not_available">;
 }

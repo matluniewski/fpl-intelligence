@@ -64,6 +64,10 @@ function u16(bytes: Uint8Array, offset: number): number {
   return (bytes[offset]! << 8) | bytes[offset + 1]!;
 }
 
+function fourCc(bytes: Uint8Array, offset: number): string {
+  return String.fromCharCode(...bytes.slice(offset, offset + 4));
+}
+
 function png(bytes: Uint8Array): readonly [number, number] | null {
   if (
     bytes.length < 24 ||
@@ -91,17 +95,43 @@ function jpeg(bytes: Uint8Array): readonly [number, number] | null {
 }
 function webp(bytes: Uint8Array): readonly [number, number] | null {
   if (
-    bytes.length < 30 ||
-    String.fromCharCode(...bytes.slice(0, 4)) !== "RIFF" ||
-    String.fromCharCode(...bytes.slice(8, 12)) !== "WEBP"
+    bytes.length < 20 ||
+    fourCc(bytes, 0) !== "RIFF" ||
+    fourCc(bytes, 8) !== "WEBP"
   )
     return null;
-  if (String.fromCharCode(...bytes.slice(12, 16)) !== "VP8X") return null;
-  if ((bytes[20]! & 0b0000_0010) !== 0) return null;
-  return [
-    1 + bytes[24]! + (bytes[25]! << 8) + (bytes[26]! << 16),
-    1 + bytes[27]! + (bytes[28]! << 8) + (bytes[29]! << 16),
-  ];
+  const chunk = fourCc(bytes, 12);
+  if (chunk === "VP8X") {
+    if (bytes.length < 30 || (bytes[20]! & 0b0000_0010) !== 0) return null;
+    return [
+      1 + bytes[24]! + (bytes[25]! << 8) + (bytes[26]! << 16),
+      1 + bytes[27]! + (bytes[28]! << 8) + (bytes[29]! << 16),
+    ];
+  }
+  if (chunk === "VP8 ") {
+    if (
+      bytes.length < 30 ||
+      bytes[23] !== 0x9d ||
+      bytes[24] !== 0x01 ||
+      bytes[25] !== 0x2a
+    )
+      return null;
+    return [
+      (bytes[26]! | (bytes[27]! << 8)) & 0x3fff,
+      (bytes[28]! | (bytes[29]! << 8)) & 0x3fff,
+    ];
+  }
+  if (chunk === "VP8L") {
+    if (bytes.length < 25 || bytes[20] !== 0x2f) return null;
+    return [
+      1 + bytes[21]! + ((bytes[22]! & 0x3f) << 8),
+      1 +
+        ((bytes[22]! & 0xc0) >> 6) +
+        (bytes[23]! << 2) +
+        ((bytes[24]! & 0x0f) << 10),
+    ];
+  }
+  return null;
 }
 
 export function validateImageInput(

@@ -21,6 +21,17 @@ function png(width: number, height: number): Uint8Array {
   return bytes;
 }
 
+function webpChunk(chunk: "VP8 " | "VP8L" | "VP8X"): Uint8Array {
+  const bytes = new Uint8Array(30);
+  bytes.set([82, 73, 70, 70], 0);
+  bytes.set([87, 69, 66, 80], 8);
+  bytes.set(
+    [...chunk].map((value) => value.charCodeAt(0)),
+    12,
+  );
+  return bytes;
+}
+
 describe("validateImageInput", () => {
   it("accepts a bounded PNG based on its signature, not a filename", () => {
     expect(validateImageInput(png(1200, 900))).toMatchObject({
@@ -43,15 +54,37 @@ describe("validateImageInput", () => {
   });
 
   it("rejects animated WebP input", () => {
-    const animated = new Uint8Array(30);
-    animated.set([82, 73, 70, 70], 0);
-    animated.set([87, 69, 66, 80], 8);
-    animated.set([86, 80, 56, 88], 12);
+    const animated = webpChunk("VP8X");
     animated[20] = 0b0000_0010;
     expect(validateImageInput(animated)).toMatchObject({
       ok: false,
       code: "unsupported_format",
     });
+  });
+
+  it("accepts extended, lossy, and lossless non-animated WebP variants", () => {
+    const extended = webpChunk("VP8X");
+    extended.set([0xff, 0x03, 0x00], 24); // 1024 pixels, stored minus one
+    extended.set([0xff, 0x01, 0x00], 27); // 512 pixels, stored minus one
+
+    const lossy = webpChunk("VP8 ");
+    lossy.set([0x9d, 0x01, 0x2a], 23);
+    lossy.set([0x00, 0x04], 26); // 1024 little-endian
+    lossy.set([0x00, 0x02], 28); // 512 little-endian
+
+    const lossless = webpChunk("VP8L");
+    lossless[20] = 0x2f;
+    lossless[21] = 0xff;
+    lossless[22] = 0xc3;
+    lossless[23] = 0x7f;
+    lossless[24] = 0x00;
+
+    for (const bytes of [extended, lossy, lossless]) {
+      expect(validateImageInput(bytes)).toMatchObject({
+        ok: true,
+        value: { mediaType: "image/webp", width: 1024, height: 512 },
+      });
+    }
   });
 });
 

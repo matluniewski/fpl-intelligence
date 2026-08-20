@@ -24,8 +24,8 @@ import type {
   TeamStateCandidate,
   TeamStateCandidateId,
   TeamStateCandidateStore,
+  TeamStateConfirmationStore,
   TeamStateId,
-  TeamStateStore,
   TeamStateValidationIssue,
   UtcInstant,
   VisionTeamStateCandidatePort,
@@ -85,10 +85,11 @@ export interface TeamStateImportDependencies {
   readonly referenceData: FootballReferenceDataPort;
   readonly vision: VisionTeamStateCandidatePort;
   readonly candidates: TeamStateCandidateStore;
-  readonly teamStates: TeamStateStore;
+  readonly confirmations: TeamStateConfirmationStore;
   readonly screenshots: EphemeralScreenshotStore;
   readonly imageDecoder: SafeImageDecoderPort;
   readonly usage: VisionUsageRecorder;
+  readonly clock: Readonly<{ now(): UtcInstant }>;
 }
 
 export type ImportConfirmationIssue =
@@ -153,52 +154,59 @@ export class TeamStateImportService {
     readonly request: Omit<ScreenshotCandidateRequest, "artifactId">;
     readonly usage: VisionUsageContext;
   }): Promise<TeamStateCandidate> {
+    // This trusted boundary timestamp starts the hard TTL before decoding.
+    const receivedAt = this.deps.clock.now();
     const decoded = await this.deps.imageDecoder.decodeAndSanitize(input.bytes);
     const artifact = await this.deps.screenshots.accept({
       bytes: decoded.bytes,
       metadata: decoded.metadata,
-      receivedAt: input.request.requestedAt,
+      receivedAt,
       expiresAt: createUtcInstant(
         new Date(
-          new Date(input.request.requestedAt).getTime() +
-            EPHEMERAL_SCREENSHOT_TTL_MS,
+          new Date(receivedAt).getTime() + EPHEMERAL_SCREENSHOT_TTL_MS,
         ).toISOString(),
       ),
     });
-    let extractedCandidate: TeamStateCandidate;
     try {
-      extractedCandidate = await this.deps.vision.createCandidate({
-        ...input.request,
-        artifactId: artifact.artifactId,
-      });
-    } catch (error) {
-      await this.deps.screenshots.delete(artifact.artifactId);
-      await this.recordVisionUsage(input, "failed");
-      throw error;
-    }
+      let extractedCandidate: TeamStateCandidate;
+      try {
+        extractedCandidate = await this.deps.vision.createCandidate({
+          ...input.request,
+          artifactId: artifact.artifactId,
+        });
+      } catch (error) {
+        try {
+          await this.recordVisionUsage(input, "failed");
+        } catch (usageError) {
+          throw new AggregateError(
+            [error, usageError],
+            "Vision extraction and usage recording both failed.",
+          );
+        }
+        throw error;
+      }
 
-    await this.recordVisionUsage(input, "succeeded");
-    const candidate =
-      extractedCandidate.gameweekId.status === "resolved" &&
-      !gameweekIdsEqual(
-        extractedCandidate.gameweekId.value,
-        input.request.intendedGameweekId,
-      )
-        ? reviseTeamStateCandidate(
-            extractedCandidate,
-            {
-              kind: "set_gameweek",
-              value: uncertainField({
-                suggestedValue: extractedCandidate.gameweekId.value,
-                origin: extractedCandidate.gameweekId.origin,
-                reason:
-                  "Extracted gameweek does not match the onboarding gameweek and requires correction.",
-              }),
-            },
-            extractedCandidate.updatedAt,
-          )
-        : extractedCandidate;
-    try {
+      await this.recordVisionUsage(input, "succeeded");
+      const candidate =
+        extractedCandidate.gameweekId.status === "resolved" &&
+        !gameweekIdsEqual(
+          extractedCandidate.gameweekId.value,
+          input.request.intendedGameweekId,
+        )
+          ? reviseTeamStateCandidate(
+              extractedCandidate,
+              {
+                kind: "set_gameweek",
+                value: uncertainField({
+                  suggestedValue: extractedCandidate.gameweekId.value,
+                  origin: extractedCandidate.gameweekId.origin,
+                  reason:
+                    "Extracted gameweek does not match the onboarding gameweek and requires correction.",
+                }),
+              },
+              extractedCandidate.updatedAt,
+            )
+          : extractedCandidate;
       await this.deps.candidates.save(candidate);
       return candidate;
     } finally {
@@ -247,10 +255,6 @@ export class TeamStateImportService {
     return candidate;
   }
 
-  /** Persists an already assembled manual candidate after a correction UI step. */
-  async saveManualCandidate(candidate: TeamStateCandidate): Promise<void> {
-    await this.deps.candidates.save(candidate);
-  }
   async revise(
     candidateId: TeamStateCandidateId,
     revision: CandidateRevision,
@@ -259,8 +263,9 @@ export class TeamStateImportService {
     const candidate = await this.deps.candidates.getById(candidateId);
     if (candidate === null) return null;
     const updated = reviseTeamStateCandidate(candidate, revision, revisedAt);
-    await this.deps.candidates.save(updated);
-    return updated;
+    return (await this.deps.candidates.replace(updated, candidate))
+      ? updated
+      : null;
   }
   async confirm(input: {
     readonly candidateId: TeamStateCandidateId;
@@ -320,8 +325,13 @@ export class TeamStateImportService {
         reason: "validation_failed",
         issues: result.issues,
       };
-    await this.deps.teamStates.saveConfirmed(result.teamState);
-    await this.deps.candidates.delete(candidate.id);
-    return { ok: true };
+    const persisted =
+      await this.deps.confirmations.saveConfirmedAndConsumeCandidate(
+        result.teamState,
+        candidate,
+      );
+    return persisted === "confirmed"
+      ? { ok: true }
+      : { ok: false, reason: "not_found" };
   }
 }
