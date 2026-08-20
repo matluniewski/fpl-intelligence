@@ -15,6 +15,7 @@ Start with:
 - [Product specification](docs/PRODUCT.md)
 - [Architecture](docs/ARCHITECTURE.md)
 - [External data provenance architecture](docs/DATA_PROVENANCE.md)
+- [FPL and Premier League data licensing review](docs/FPL_DATA_LICENSING.md)
 - [Provider usage and cost telemetry architecture](docs/COST_TELEMETRY.md)
 - [Recommendation contract](docs/RECOMMENDATIONS.md)
 - [Development guide](docs/DEVELOPMENT.md)
