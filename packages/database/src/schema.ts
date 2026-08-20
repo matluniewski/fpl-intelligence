@@ -1,5 +1,6 @@
 import type { Recommendation } from "@fpl-intelligence/domain";
 import {
+  boolean,
   index,
   integer,
   jsonb,
@@ -67,4 +68,93 @@ export const recommendationSnapshots = applicationSchema.table(
     ),
     index("recommendation_snapshots_retention_idx").on(table.retainUntil),
   ],
+);
+
+/**
+ * Provider-independent, content-minimized news artifacts. The JSON values are
+ * validated domain contracts; provider DTOs and raw content stay in adapters.
+ */
+export const rawNewsItems = applicationSchema.table(
+  "raw_news_items",
+  {
+    rawNewsItemId: text("raw_news_item_id").primaryKey(),
+    ingestionKey: text("ingestion_key").notNull().unique(),
+    sourceId: text("source_id").notNull(),
+    providerId: text("provider_id").notNull(),
+    fetchedAt: timestamp("fetched_at", {
+      mode: "date",
+      withTimezone: true,
+    }).notNull(),
+    policyState: text("policy_state").notNull(),
+    lifecycleState: text("lifecycle_state").notNull(),
+    lifecycleEvaluatedAt: timestamp("lifecycle_evaluated_at", {
+      mode: "date",
+      withTimezone: true,
+    }).notNull(),
+    retainUntil: timestamp("retain_until", {
+      mode: "date",
+      withTimezone: true,
+    }),
+    payloadFingerprint: text("payload_fingerprint").notNull(),
+    item: jsonb("item").notNull(),
+  },
+  (table) => [
+    index("raw_news_items_lifecycle_idx").on(
+      table.lifecycleState,
+      table.retainUntil,
+    ),
+  ],
+);
+
+function newsArtifactTable(name: string, idColumn: string) {
+  return applicationSchema.table(
+    name,
+    {
+      id: text(idColumn).primaryKey(),
+      playerId: text("player_id"),
+      effectiveFrom: timestamp("effective_from", {
+        mode: "date",
+        withTimezone: true,
+      }),
+      effectiveUntil: timestamp("effective_until", {
+        mode: "date",
+        withTimezone: true,
+      }),
+      evaluatedAt: timestamp("evaluated_at", {
+        mode: "date",
+        withTimezone: true,
+      }).notNull(),
+      expiresAt: timestamp("expires_at", { mode: "date", withTimezone: true }),
+      supersededById: text("superseded_by_id"),
+      lifecycleState: text("lifecycle_state").notNull(),
+      retainUntil: timestamp("retain_until", {
+        mode: "date",
+        withTimezone: true,
+      }),
+      payloadFingerprint: text("payload_fingerprint").notNull(),
+      artifact: jsonb("artifact").notNull(),
+      isCurrentCandidate: boolean("is_current_candidate")
+        .notNull()
+        .default(true),
+    },
+    (table) => [
+      index(`${name}_current_at_idx`).on(
+        table.playerId,
+        table.lifecycleState,
+        table.effectiveFrom,
+        table.effectiveUntil,
+        table.expiresAt,
+        table.evaluatedAt,
+      ),
+      index(`${name}_retention_idx`).on(table.retainUntil),
+    ],
+  );
+}
+
+export const claims = newsArtifactTable("claims", "claim_id");
+export const evidence = newsArtifactTable("evidence", "evidence_id");
+export const newsSignals = newsArtifactTable("news_signals", "news_signal_id");
+export const playerAvailabilityStates = newsArtifactTable(
+  "player_availability_states",
+  "availability_state_id",
 );

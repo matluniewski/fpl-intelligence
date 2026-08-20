@@ -24,3 +24,16 @@ The current setup selects no managed PostgreSQL provider or deployment topology.
 `RecommendationHistoryRepository` persists immutable, validated recommendation contracts with the exact normalized input versions and references needed for audit and comparison. It classifies adjacent comparable snapshots as an initial recommendation, an equivalent recalculation, or a material change without storing provider DTOs, screenshots, credentials, user accounts, or unnecessary raw content.
 
 Retention is explicit and versioned. Records without a `retainUntil` value are not removed by the repository; records with a deadline are deleted only through `deleteExpired(asOf)` using a caller-supplied evaluation time. The package does not run an implicit retention scheduler.
+
+## News intelligence state
+
+FPL-28 persists `RawNewsItem`, `Claim`, `Evidence`, `NewsSignal`, and
+`PlayerAvailabilityState` as distinct provider-independent records. Stored
+values are validated domain artifacts and content-minimized metadata only;
+provider DTOs and raw news content remain outside this package.
+
+Lifecycle, expiry, supersession, and retention are separate fields. Current
+availability reads require a caller-supplied UTC evaluation time and preserve
+conflicting historical states rather than selecting or deleting one silently.
+Retention deletion is explicit through `deleteExpired(asOf)`; no scheduler or
+database/hosting provider is selected here.
