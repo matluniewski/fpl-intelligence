@@ -3,11 +3,13 @@ import type {
   SeasonId,
   TeamStateCandidateId,
   TeamStateId,
+  WatchlistId,
 } from "./identifiers";
 import type { RawNewsItem } from "./news-intelligence";
 import type { UtcInstant } from "./primitives";
 import type { GameweekId, ReferenceDataSnapshot } from "./reference-data";
 import type { TeamState, TeamStateCandidate } from "./team-state";
+import type { Watchlist } from "./watchlist";
 
 export interface ReferenceDataQuery {
   readonly seasonId: SeasonId;
@@ -80,4 +82,10 @@ export interface TeamStateConfirmationStore {
     teamState: TeamState,
     expectedCandidate: TeamStateCandidate,
   ): Promise<"confirmed" | "candidate_not_available">;
+}
+
+/** Storage remains local to the team's context until accounts are explicitly approved. */
+export interface WatchlistStore {
+  getById(id: WatchlistId): Promise<Watchlist | null>;
+  save(watchlist: Watchlist): Promise<void>;
 }
