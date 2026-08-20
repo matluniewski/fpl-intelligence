@@ -18,3 +18,5 @@ CREATE TABLE "fpl_intelligence"."team_states" (
 );
 --> statement-breakpoint
 CREATE INDEX "team_states_latest_idx" ON "fpl_intelligence"."team_states" USING btree ("confirmed_at", "team_state_id");
+--> statement-breakpoint
+CREATE UNIQUE INDEX "team_states_candidate_unique_idx" ON "fpl_intelligence"."team_states" USING btree ("candidate_id");

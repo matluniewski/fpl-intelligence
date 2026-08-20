@@ -11,6 +11,7 @@ import {
   pgSchema,
   text,
   timestamp,
+  uniqueIndex,
 } from "drizzle-orm/pg-core";
 import type { RecommendationSnapshotContext } from "./recommendation-history";
 
@@ -115,6 +116,7 @@ export const teamStates = applicationSchema.table(
     teamState: jsonb("team_state").$type<TeamState>().notNull(),
   },
   (table) => [
+    uniqueIndex("team_states_candidate_unique_idx").on(table.candidateId),
     index("team_states_latest_idx").on(table.confirmedAt, table.teamStateId),
   ],
 );
