@@ -12,3 +12,4 @@ export * from "./reference-data-errors";
 export * from "./reference-data-source";
 export * from "./usage-telemetry";
 export * from "./synthetic-news-source-adapter";
+export * from "./scheduled-news-pipeline";
