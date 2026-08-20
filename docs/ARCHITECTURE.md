@@ -166,7 +166,7 @@ Persist only data required for an approved purpose and retention window. In part
 
 The detailed conceptual provenance contract, lineage rules, provider-replacement boundary, and lifecycle propagation requirements are defined in [DATA_PROVENANCE.md](./DATA_PROVENANCE.md). Their exact persistence schema is intentionally deferred.
 
-PostgreSQL and Drizzle ORM provide the provider-neutral persistence foundation. The current migration reserves the application-owned `fpl_intelligence` schema without defining product or provider tables. Persistence records remain separate from domain contracts, and no managed database provider or deployment topology has been selected.
+PostgreSQL and Drizzle ORM provide the provider-neutral persistence foundation. Versioned migrations define application-owned recommendation, news-intelligence, provisional TeamState-candidate, and confirmed TeamState records in the `fpl_intelligence` schema. Screenshot bytes, crops, OCR, and provider DTOs are never persisted in these tables. Provisional candidates have bounded retention, while confirmed normalized TeamState snapshots remain the durable recommendation input. Persistence records remain separate from domain contracts, and no managed database provider or deployment topology has been selected.
 
 ## 8. Time, identity, and determinism
 

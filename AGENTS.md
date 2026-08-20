@@ -79,6 +79,7 @@ Read [the architecture](docs/ARCHITECTURE.md) before changing module boundaries,
 - Validate all external inputs at the trust boundary and fail closed when permission, retention, deletion, commercial rights, or processing terms are unknown.
 - Do not assume public availability, attribution, a subscription, technical API access, or LLM summarization grants commercial or reuse rights.
 - Do not scrape X, websites, search results, or browser sessions. Do not use unofficial FPL endpoints, FPL credentials, session cookies, browser automation, or an unapproved fallback source.
+- A private, development-only X API proof of concept is permitted only when an owning Linear issue defines the official API access path, current terms review, source allowlist, budget, retention/deletion controls, and manual kill switch. This owner policy decision is not a legal determination, commercial-use approval, or approval from X. Do not enable runtime ingestion, credentials, credit purchases, public access, or external-LLM processing unless a later approved issue authorizes the exact path.
 - Preserve upstream provenance and source restrictions; never launder provider data through a normalized model.
 - Follow [NEWS_SOURCE_COMPLIANCE.md](docs/NEWS_SOURCE_COMPLIANCE.md) for source enablement, external-LLM processing, retention, display, correction, deletion, and kill-switch requirements.
 - Apply least privilege, environment isolation, content-free structured logging, and explicit rate, quota, and variable-cost budgets when an owning issue introduces external services.

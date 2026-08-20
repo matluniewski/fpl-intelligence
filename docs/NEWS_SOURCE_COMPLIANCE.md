@@ -114,16 +114,16 @@ The `news.first-party.research.v1` path must be disabled by default. Enabling it
 | --- | --- |
 | Provider and access | X Corp.; official X API product and approved developer account only. Browser automation, HTML scraping, unofficial APIs, copied datasets, or credential sharing are prohibited fallbacks. |
 | Terms reference | [Developer Agreement](https://docs.x.com/developer-terms/agreement), [Developer Policy](https://docs.x.com/developer-terms/policy), [Restricted Use Cases](https://docs.x.com/developer-terms/restricted-use-cases), [Display Requirements](https://docs.x.com/developer-terms/display-requirements), [Developer Guidelines](https://docs.x.com/developer-guidelines), and [Compliance Streams](https://docs.x.com/x-api/compliance/streams/introduction). Agreement page reviewed as updated 2026-04-27; all terms require re-check before approval. |
-| Commercial use | Not approved for this use case. X requires the disclosed use to be approved and may require a different access tier; payment alone is not commercial-use approval. |
-| Planned processing | Retrieve allowlisted football posts; normalize; extract availability, injury, training, selection, and rotation claims; combine evidence; store references and minimal evidence; display source-linked explanations. |
-| Retention | X rules restrict redistribution and require stored X Content to reflect deletion or modification. A future implementation must use the relevant compliance mechanism and action deletion/change events within the required window. Storage must be minimized and separately approved. |
+| Commercial use | Not approved. The owner authorizes a private, development-only POC only; payment, a subscription, or this policy does not create commercial-use approval or X approval. |
+| Planned processing | A future approved POC may retrieve a small allowlist of football posts; classify them as `official_fact`, `reporting`, `analysis`, `prediction`, or `rumour`; and retain only the approved minimum necessary for provenance and deterministic/local processing. It must not treat opinion or prediction as factual availability evidence. |
+| Retention | X rules restrict redistribution and require stored X Content to reflect deletion or modification. Any future POC must minimize storage, implement the applicable compliance/deletion path, and action deletion/change events within the required window. |
 | Display and redistribution | Any post display must remain unmodified and satisfy current author, profile, timestamp, X branding, action/link, and attribution requirements. X does not grant rights to third-party content. Bulk redistribution is not approved. |
-| External LLM | Not approved. Sending X Content to a model provider is a third-party transfer that needs explicit coverage. Foundation/frontier-model training is prohibited by X's restricted-use rules except where X states otherwise. A no-training processor contract alone does not resolve the health-inference restriction. |
-| Health/injury restrictions | Material blocker. X states that developers must never derive, infer, or store information about an X user's health. The planned extraction of player injury or availability claims may do exactly that when the subject is an X user. Public status or professional-athlete status is not treated as an exception. |
-| Deletion and operations | Requires content deletion/change propagation, provenance, approved-use-case control, attribution checks, rate/cost telemetry, quota handling, terms-change review, and an immediate kill switch. |
-| Status | `unclear`; disabled for ingestion, extraction, persistence, display, and external-LLM processing until X gives written approval for the exact use case and qualified legal review approves it. |
+| External LLM | Disabled. A future issue may enable it only when the current published X terms and the selected processor terms expressly permit the exact transfer and purpose. Foundation/frontier-model training and fine-tuning remain prohibited. Prefer deterministic or local processing for the POC. |
+| Health/injury restrictions | The POC must not diagnose a person or infer health about an X user. It may preserve explicitly stated football availability claims only if the owning issue records the source category, wording, uncertainty, and relevant terms review. Any broader health/injury processing remains blocked pending qualified review. |
+| Deletion and operations | Requires deletion/change propagation, provenance, attribution checks, rate/cost telemetry, quota handling, terms-change review, an immediate global and per-source kill switch, and a small source allowlist. |
+| Status | `restricted`; owner-authorized for a private, development-only POC under FPL-68. No runtime integration, credentials, credit purchase, external data ingestion, public display, commercial use, or external-LLM processing is enabled by this status. |
 
-An approval limited to reading posts, or a paid API plan, is not sufficient. The written use-case decision must cover player health/availability extraction, derived structured signals, storage, multi-source reconciliation, commercial decision support, display, and any external processor.
+For live, public, or commercial use, an approval limited to reading posts, or a paid API plan, is not sufficient. The written use-case decision must cover player health/availability extraction, derived structured signals, storage, multi-source reconciliation, commercial decision support, display, and any external processor.
 
 ### 4.4 X scraping or unofficial access
 
@@ -259,7 +259,7 @@ Before processing real health or injury information in a consented pilot, public
 
 Product and model language must describe football availability evidence, not diagnose a person. The system must preserve whether a statement was explicit, quoted, reported, speculative, or inferred. It must not turn uncertainty into an asserted medical fact.
 
-The X-specific restriction in section 4.3 remains independently blocking even if a general data-protection basis is later identified.
+The X-specific constraints in section 4.3 remain independently binding even if a general data-protection basis is later identified. The FPL-68 POC authorization does not supersede X terms or enable commercial/public processing.
 
 ## 7. Data minimization and retention
 
@@ -372,7 +372,7 @@ Before a consented pilot, public beta, or commercial release using live sources,
 - evidence that deletion/correction propagation and source disablement work; and
 - recorded legal reviewer, decision, conditions, date, and re-review trigger.
 
-For X specifically, written X approval of the exact health/availability extraction and storage use case is required in addition to qualified legal review. Until then, X is not a candidate for the first live source.
+For X specifically, the FPL-68 authorization permits only a private, development-only POC within its recorded controls. Written X approval for the exact use case and qualified legal review remain required before X can become a live, public, or commercial source.
 
 ## 14. Downstream requirements
 

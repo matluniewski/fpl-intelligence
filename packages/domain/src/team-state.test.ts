@@ -4,6 +4,8 @@ import { createProvenanceId, createTeamStateId } from "./identifiers";
 import { createFplMoney, createUtcInstant } from "./primitives";
 import type { ProvenanceRecord } from "./provenance";
 import {
+  createScreenshotFieldOrigin,
+  createUserCorrectionFieldOrigin,
   confirmTeamState,
   missingField,
   resolvedField,
@@ -21,6 +23,28 @@ import {
 } from "./testing/synthetic-fixtures";
 
 describe("TeamState candidate validation and confirmation", () => {
+  it("distinguishes assessed screenshot extraction from user correction", () => {
+    const screenshot = createScreenshotFieldOrigin({
+      capturedAt: SYNTHETIC_NOW,
+      confidence: { band: "medium", score: 0.7 },
+    });
+    const correction = createUserCorrectionFieldOrigin(SYNTHETIC_NOW);
+
+    expect(screenshot).toMatchObject({
+      kind: "screenshot_extraction",
+      confidence: { band: "medium", score: 0.7 },
+    });
+    expect(correction).toMatchObject({
+      kind: "user_correction",
+      confidence: { band: "not_assessed" },
+    });
+    expect(() =>
+      createScreenshotFieldOrigin({
+        capturedAt: SYNTHETIC_NOW,
+        confidence: { band: "not_assessed" },
+      }),
+    ).toThrow("must be assessed");
+  });
   it("confirms a legal candidate while preserving field origins", () => {
     const candidate = createSyntheticCandidate();
     const result = confirmTeamState({

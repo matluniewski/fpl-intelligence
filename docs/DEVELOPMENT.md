@@ -70,6 +70,7 @@ apps/
   web/                 Next.js App Router application
 packages/
   domain/              Framework-independent domain contracts and invariants
+  application/         Provider-independent TeamState import use cases and ports
   adapters/            External/file validation, mapping and adapter boundaries
   database/            Provider-neutral PostgreSQL and Drizzle infrastructure
 docs/                  Product and engineering documentation

@@ -1,4 +1,8 @@
-import type { Recommendation } from "@fpl-intelligence/domain";
+import type {
+  Recommendation,
+  TeamState,
+  TeamStateCandidate,
+} from "@fpl-intelligence/domain";
 import {
   boolean,
   index,
@@ -67,6 +71,51 @@ export const recommendationSnapshots = applicationSchema.table(
       table.generatedAt,
     ),
     index("recommendation_snapshots_retention_idx").on(table.retainUntil),
+  ],
+);
+
+/**
+ * Only normalized contracts are persisted here. Screenshot bytes, crops, OCR,
+ * and provider DTOs remain exclusively in an ephemeral adapter store.
+ */
+export const teamStateCandidates = applicationSchema.table(
+  "team_state_candidates",
+  {
+    candidateId: text("candidate_id").primaryKey(),
+    createdAt: timestamp("created_at", {
+      mode: "date",
+      withTimezone: true,
+    }).notNull(),
+    updatedAt: timestamp("updated_at", {
+      mode: "date",
+      withTimezone: true,
+    }).notNull(),
+    retainUntil: timestamp("retain_until", {
+      mode: "date",
+      withTimezone: true,
+    }).notNull(),
+    candidate: jsonb("candidate").$type<TeamStateCandidate>().notNull(),
+  },
+  (table) => [
+    index("team_state_candidates_retention_idx").on(table.retainUntil),
+  ],
+);
+
+export const teamStates = applicationSchema.table(
+  "team_states",
+  {
+    teamStateId: text("team_state_id").primaryKey(),
+    candidateId: text("candidate_id").notNull(),
+    gameweekSeasonId: text("gameweek_season_id").notNull(),
+    gameweekNumber: integer("gameweek_number").notNull(),
+    confirmedAt: timestamp("confirmed_at", {
+      mode: "date",
+      withTimezone: true,
+    }).notNull(),
+    teamState: jsonb("team_state").$type<TeamState>().notNull(),
+  },
+  (table) => [
+    index("team_states_latest_idx").on(table.confirmedAt, table.teamStateId),
   ],
 );
 
