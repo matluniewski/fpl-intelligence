@@ -90,6 +90,17 @@ Read [the architecture](docs/ARCHITECTURE.md) before changing module boundaries,
 - Include approved loading, empty, error, stale, partial, unavailable, onboarding, confirmation, and recovery states where relevant.
 - Do not infer product behavior solely from illustrative wireframe content.
 
+## Economical Codex usage
+
+- Make the smallest change that satisfies the task and avoid unrelated refactors.
+- Start with `git status`, `git diff`, `rg`, and the few relevant files instead of scanning the repository.
+- Do not spawn subagents or run agents in parallel unless the owner explicitly requests it.
+- Use the internet, MCP, and external tools only when required.
+- Run the narrowest relevant test first, then broader checks only when needed; do not repeat checks without cause.
+- Ask before broad exploration when ambiguous requirements cannot be resolved narrowly.
+- Keep final responses concise: changed files, verification, and anything requiring attention.
+- Minimize model calls, loaded context, and generated text without reducing correctness or safety.
+
 ## Development commands
 
 Run commands from the repository root with the pinned Node.js and pnpm versions:

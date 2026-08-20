@@ -1,0 +1,11 @@
+model = "gpt-5.6-terra"
+model_reasoning_effort = "low"
+model_verbosity = "low"
+model_reasoning_summary = "none"
+
+approval_policy = "on-request"
+approvals_reviewer = "user"
+sandbox_mode = "workspace-write"
+
+[agents]
+enabled = false
