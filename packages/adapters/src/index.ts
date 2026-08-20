@@ -1,4 +1,5 @@
 export * from "./player-identity";
+export * from "./claim-extraction";
 export * from "./curated-news-ingestion";
 export * from "./first-party-research-news-source-adapter";
 export * from "./in-memory-news-store";
