@@ -32,6 +32,8 @@ The validation context is deliberately supplied by the caller. This keeps the pa
 
 The news boundary runtime-validates untrusted extraction candidates before creating unresolved Claims. It preserves separate raw-item policy state, Evidence stances, deterministic NewsSignal lineage, and projection-facing PlayerAvailabilityState values. Unknown permissions fail closed, conflicting evidence can coexist, and no model output becomes truth by itself.
 
+`SourceReputationCatalog` provides separately versioned, manually reviewed source-context tiers with a conservative fallback. It does not calculate claim certainty or final signal confidence, and it contains no learned scoring.
+
 See [docs/NEWS_INTELLIGENCE_CONTRACTS.md](../../docs/NEWS_INTELLIGENCE_CONTRACTS.md) for layer boundaries, lifecycle, and compatibility expectations.
 
 ## Recommendations
