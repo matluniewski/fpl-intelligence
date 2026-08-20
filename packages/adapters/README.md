@@ -27,6 +27,15 @@ The current `StaticReferenceDataSource` and `JsonTextReferenceDataSource` suppor
 - Invalid payloads, timeouts, rate limits, non-success responses, unavailable sources, policy blocks, unsupported queries, and domain-mapping failures remain typed.
 - Usage telemetry records a shared reference-data operation without player names, squads, URLs, payloads, or direct user identifiers.
 - Telemetry failure creates a visible result warning for a valid load or typed error metadata for a failed load; it never silently reports zero usage.
+
+## Curated news ingestion
+
+FPL-22 adds central, shared ingestion for the project-authored `news.synthetic.fixture.v1` policy. The adapter runtime-validates its private fixture DTO and maps only normalized `RawNewsItem` values across the boundary. The coordinator enforces the two policy IDs approved by the compliance register, environment controls, expiry, bounded source reads, runtime kill switches, central cache and deduplication, freshness, lifecycle updates, external-processing authorization, and content-free shared telemetry. It always reports `liveCoverage: false`.
+
+`news.first-party.research.v1` remains disabled unless an explicitly enabled restricted policy, approved research/pilot environment, and current per-record rights record are supplied together. No HTTP client, browser automation, scraping, unofficial fallback, or live third-party source is implemented.
+
+See [`docs/NEWS_INGESTION.md`](../../docs/NEWS_INGESTION.md) for the allowlist, policy controls, lifecycle behavior, and deferred decisions.
+
 - `resolvePlayerIdentity` performs deterministic normalized-name matching, optionally narrowed by team and position, and returns ambiguous/not-found states instead of fuzzy guessing.
 
 The fixture exported from `@fpl-intelligence/adapters/testing` is synthetic and is suitable only for tests, local development, and clearly labelled demonstrations.
