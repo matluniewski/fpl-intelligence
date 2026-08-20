@@ -18,3 +18,9 @@ pnpm db:down
 Use `pnpm --filter @fpl-intelligence/database db:generate --name=<migration-name>` after an approved schema change. Review generated SQL and metadata before committing them. Never use `drizzle-kit push` in shared or production environments because it bypasses version-controlled migration review.
 
 The current setup selects no managed PostgreSQL provider or deployment topology. A later consequential selection requires its owning issue and an approved ADR.
+
+## Recommendation history
+
+`RecommendationHistoryRepository` persists immutable, validated recommendation contracts with the exact normalized input versions and references needed for audit and comparison. It classifies adjacent comparable snapshots as an initial recommendation, an equivalent recalculation, or a material change without storing provider DTOs, screenshots, credentials, user accounts, or unnecessary raw content.
+
+Retention is explicit and versioned. Records without a `retainUntil` value are not removed by the repository; records with a deadline are deleted only through `deleteExpired(asOf)` using a caller-supplied evaluation time. The package does not run an implicit retention scheduler.

@@ -18,6 +18,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@fpl-intelligence/domain": "workspace:*",
     "drizzle-orm": "0.45.2",
     "postgres": "3.4.9"
   },

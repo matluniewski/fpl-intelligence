@@ -78,6 +78,14 @@ Recommendations are immutable snapshots. Recomputing after a material input chan
 
 Compatible additions still require consumer review when they change rendering, persistence, ranking, or safety behavior. Consequential changes to trust boundaries or account actions require an approved issue and, where applicable, an ADR.
 
+## Snapshot persistence and comparison
+
+The database boundary stores each validated recommendation as an immutable snapshot together with the confirmed `TeamState` version, baseline/current projection versions, projection-input version, rules and algorithm identities, news-signal/availability/Claim/Evidence references, confidence methodology, planning horizon, recording time, and retention-policy version.
+
+Comparable history is keyed by confirmed team identity, recommendation kind, contract version, and primary planning horizon. A deterministic material fingerprint excludes recommendation identity, evaluation timestamps, supersession metadata, and retention policy: recomputing the same versioned inputs and structured output is therefore classified as an equivalent recalculation, while a changed input version, evidence set, confidence factor, action, impact, assumption, risk, or explanation is material. FPL-51 owns the user-facing explanation of those transitions.
+
+Snapshots contain normalized references and structured recommendation output only. They do not persist screenshots, provider DTOs, credentials, or unnecessary raw news content. Expiry deletion requires an explicit caller-supplied evaluation time and a per-record `retainUntil` value; scheduling remains outside this persistence boundary.
+
 ## Synthetic examples
 
 The domain testing entry point exposes project-authored synthetic examples covering:
