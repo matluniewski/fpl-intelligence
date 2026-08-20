@@ -8,8 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "lint:fix": "eslint --fix",
-    "test": "vitest run",
-    "test:watch": "vitest",
+    "test": "vitest run --pool=threads --configLoader native",
+    "test:watch": "vitest --pool=threads --configLoader native",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

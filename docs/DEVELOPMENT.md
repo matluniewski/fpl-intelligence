@@ -86,6 +86,8 @@ Run commands from the repository root unless a troubleshooting step explicitly r
 
 The web workspace also exposes `lint:fix` and `test:watch`. The domain, adapter, and projection workspaces expose focused test commands; domain, adapter, and projection packages also expose synthetic-fixture entry points for contract work.
 
+Vitest commands use the `threads` pool rather than process forks. Packages with a Vitest configuration also use Vitest's native config loader rather than Vite's process-spawning config bundler. This keeps unit tests compatible with Codex's `workspace-write` sandbox while retaining parallel test execution. Run `pnpm test` as the regression check; do not relax the sandbox merely to run unit tests.
+
 ## 6. Environment and secrets
 
 The web bootstrap has no runtime environment variables. Local database commands use the non-production placeholders documented in `.env.example`; copy them to the ignored `.env.local` file before running migrations or integration tests.

@@ -18,7 +18,7 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "lint": "pnpm --filter @fpl-intelligence/domain --filter @fpl-intelligence/adapters --filter @fpl-intelligence/database --filter @fpl-intelligence/projection --filter @fpl-intelligence/web lint",
-    "test": "pnpm --filter @fpl-intelligence/domain --filter @fpl-intelligence/adapters --filter @fpl-intelligence/database --filter @fpl-intelligence/projection --filter @fpl-intelligence/web test",
+    "test": "pnpm --filter @fpl-intelligence/domain test && pnpm --filter @fpl-intelligence/adapters test && pnpm --filter @fpl-intelligence/database test && pnpm --filter @fpl-intelligence/projection test && pnpm --filter @fpl-intelligence/web test",
     "typecheck": "pnpm --filter @fpl-intelligence/domain --filter @fpl-intelligence/adapters --filter @fpl-intelligence/database --filter @fpl-intelligence/projection --filter @fpl-intelligence/web typecheck"
   },
   "devDependencies": {

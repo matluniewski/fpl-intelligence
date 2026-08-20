@@ -13,8 +13,8 @@
     "db:generate": "drizzle-kit generate --config=drizzle.config.ts",
     "db:migrate": "drizzle-kit migrate --config=drizzle.config.ts",
     "lint": "eslint .",
-    "test": "vitest run",
-    "test:integration": "vitest run --config=vitest.integration.config.mts",
+    "test": "vitest run --pool=threads --configLoader native",
+    "test:integration": "vitest run --pool=threads --configLoader native --config=vitest.integration.config.mts",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
