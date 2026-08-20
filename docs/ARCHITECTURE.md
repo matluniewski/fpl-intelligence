@@ -112,7 +112,7 @@ permitted source adapter
   -> PlayerAvailabilityState
 ```
 
-- A source is fail-closed unless [NEWS_SOURCE_COMPLIANCE.md](./NEWS_SOURCE_COMPLIANCE.md) permits the exact access and processing path.
+- Source adapters must use an explicitly configured access path. The internal X API path defined in [NEWS_SOURCE_COMPLIANCE.md](./NEWS_SOURCE_COMPLIANCE.md) is enabled for prototype use; unknown or disabled adapters still fail closed.
 - Raw provider DTOs and disallowed content are stopped at the adapter/policy boundary.
 - Extraction confidence, claim certainty, source reliability, signal confidence, projection uncertainty, and recommendation confidence remain distinct.
 - Conflicting claims may coexist. Deterministic rules evaluate reliability, recency, corroboration, directness, expiry, correction, and withdrawal.
@@ -189,7 +189,7 @@ Actual metered usage, avoided usage from caching or deduplication, monetary esti
 - Validate all external input at the trust boundary.
 - Isolate secrets by environment and grant least privilege.
 - Use idempotency for ingestion, lifecycle, and deletion work.
-- Fail closed when provider permission, external-LLM permission, retention, or deletion behavior is unknown.
+- Fail closed when an access method, secret, or retention/deletion behavior is unknown. The internal X API policy deliberately permits prototype processing; it does not authorize a public or commercial product.
 - Keep real screenshots, FPL credentials, session cookies, provider content, and personal/health data out of source control and CI artifacts.
 - Do not silently fall back to scraping or another source when an adapter is unavailable or disabled.
 - Require explicit human approval before any external FPL account action.

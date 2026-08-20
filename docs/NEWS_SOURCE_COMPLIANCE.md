@@ -1,29 +1,29 @@
-# News Source Compliance Register
+# News Source Policy for the Internal Project
 
-Status: Engineering and product compliance baseline; not legal advice
+Status: Internal-project source policy; not legal advice
 
 Owner: FPL-45
 
-Last updated: 2026-08-18
+Last updated: 2026-08-20
 
 ## 1. Purpose
 
-This document defines which news and player-availability source paths FPL Intelligence may use, the conditions attached to each path, and the evidence required before a path can be enabled.
+This document defines which news and player-availability source paths FPL Intelligence may use in its private/internal prototype and the technical guardrails attached to each path.
 
-It is the version-controlled compliance input for `NewsSource` implementation, AI-assisted extraction, storage, display, and operations. It does not make a legal conclusion and does not replace review by qualified counsel. Provider contracts, current terms, applicable law, and the exact deployed processing determine whether a source may be used.
+It is the version-controlled policy input for `NewsSource` implementation, AI-assisted extraction, storage, display, and operations. It does not make a legal conclusion. This project is not planned for public or commercial release, so this document deliberately prioritizes a practical, reversible prototype workflow over public-launch readiness.
 
 The governing product boundary is in [PRODUCT.md](./PRODUCT.md). Linear owns issue status and acceptance criteria. Any consequential provider or architecture selection belongs in `docs/adr/` when the decision is required.
 
 ## 2. Decision rules
 
-### 2.1 Default deny
+### 2.1 Explicit configuration
 
-A live external source is disabled unless this register identifies:
+A live external source is disabled unless this register identifies its access method and intended prototype use. The policy need not establish commercial or public-release rights for an internal-only experiment, but it must identify:
 
 - the exact provider and access product;
 - an authorized access method;
 - the terms or contract version reviewed;
-- the intended commercial environment and processing purpose;
+- the intended environment and processing purpose;
 - permitted raw-content and metadata retention;
 - display, quotation, linking, attribution, and redistribution rules;
 - whether content may be sent to an external LLM;
@@ -31,7 +31,7 @@ A live external source is disabled unless this register identifies:
 - deletion and change-propagation duties; and
 - rate-limit, cost, monitoring, and incident obligations.
 
-Technical accessibility, public visibility, a robots allowance, a search result, or the ability to purchase API access is not permission for the planned use.
+Technical accessibility alone does not enable an adapter. Official API access and a deliberate policy entry do enable the internal X prototype path below.
 
 ### 2.2 Status vocabulary
 
@@ -71,8 +71,9 @@ FPL-22 may implement the `NewsSource` boundary and the ingestion mechanics using
 | --- | --- | --- | --- |
 | `news.synthetic.fixture.v1` | Project-authored synthetic fixtures | Automated tests, local development, demonstrations clearly labelled as synthetic, and non-user-facing pipeline verification. No real person or copied provider content. | `permitted` |
 | `news.first-party.research.v1` | Project-authored material, or a minimal item entered under documented per-record rights | Internal research or a consented pilot only. Each real item requires a rights record covering the intended processing, retention, LLM path, and display. No bulk collection. | `restricted` |
+| `news.x.api.internal.v1` | Responses from the official X API | Private/internal prototype: retrieve, normalize, classify, extract football availability/selection signals, and use them in decision-support analysis. No scraping, browser automation, public product, or bulk redistribution. | `permitted` |
 
-No live third-party automated source is approved by this review. FPL-22 may prove normalization, provenance, deduplication, extraction, expiry, and kill-switch behavior with the two paths above, but it must not claim live news coverage.
+The official X API is the only live third-party automated source enabled by this policy, and only for the internal prototype. FPL-22 may prove normalization, provenance, deduplication, extraction, expiry, and kill-switch behavior with these paths, but must not present the result as a public service or commercially licensed feed.
 
 The `news.first-party.research.v1` path must be disabled by default. Enabling it requires a per-record rights reference and an environment-level approval. A manually copied public post or article is not first-party material and does not qualify.
 
@@ -114,16 +115,16 @@ The `news.first-party.research.v1` path must be disabled by default. Enabling it
 | --- | --- |
 | Provider and access | X Corp.; official X API product and approved developer account only. Browser automation, HTML scraping, unofficial APIs, copied datasets, or credential sharing are prohibited fallbacks. |
 | Terms reference | [Developer Agreement](https://docs.x.com/developer-terms/agreement), [Developer Policy](https://docs.x.com/developer-terms/policy), [Restricted Use Cases](https://docs.x.com/developer-terms/restricted-use-cases), [Display Requirements](https://docs.x.com/developer-terms/display-requirements), [Developer Guidelines](https://docs.x.com/developer-guidelines), and [Compliance Streams](https://docs.x.com/x-api/compliance/streams/introduction). Agreement page reviewed as updated 2026-04-27; all terms require re-check before approval. |
-| Commercial use | Not approved for this use case. X requires the disclosed use to be approved and may require a different access tier; payment alone is not commercial-use approval. |
-| Planned processing | Retrieve allowlisted football posts; normalize; extract availability, injury, training, selection, and rotation claims; combine evidence; store references and minimal evidence; display source-linked explanations. |
-| Retention | X rules restrict redistribution and require stored X Content to reflect deletion or modification. A future implementation must use the relevant compliance mechanism and action deletion/change events within the required window. Storage must be minimized and separately approved. |
-| Display and redistribution | Any post display must remain unmodified and satisfy current author, profile, timestamp, X branding, action/link, and attribution requirements. X does not grant rights to third-party content. Bulk redistribution is not approved. |
-| External LLM | Not approved. Sending X Content to a model provider is a third-party transfer that needs explicit coverage. Foundation/frontier-model training is prohibited by X's restricted-use rules except where X states otherwise. A no-training processor contract alone does not resolve the health-inference restriction. |
-| Health/injury restrictions | Material blocker. X states that developers must never derive, infer, or store information about an X user's health. The planned extraction of player injury or availability claims may do exactly that when the subject is an X user. Public status or professional-athlete status is not treated as an exception. |
-| Deletion and operations | Requires content deletion/change propagation, provenance, approved-use-case control, attribution checks, rate/cost telemetry, quota handling, terms-change review, and an immediate kill switch. |
-| Status | `unclear`; disabled for ingestion, extraction, persistence, display, and external-LLM processing until X gives written approval for the exact use case and qualified legal review approves it. |
+| Commercial use | Outside this policy. A future public or commercial use needs a separate review. |
+| Planned processing | Retrieve configured football posts; normalize; extract availability, injury, training, selection, and rotation claims; combine evidence; persist the minimum needed for provenance and debugging; use the result in private decision-support analysis. |
+| Retention | Keep raw X content short-lived and minimize stored fields. Retain normalized claims, provenance, and references only for the prototype's analysis and explainability needs. Apply deletion/change events when supported by the configured API plan. |
+| Display and redistribution | Do not build a public feed or redistribute posts. Internal diagnostic views should link to the source rather than reproduce it wholesale. |
+| External LLM | Permitted for internal extraction/classification when the selected processor is configured not to train on submitted content and does not retain it beyond the request where that option is available. Model output remains an untrusted candidate. |
+| Health/injury restrictions | The project does not process users' medical or health data. Public player availability or injury statements may be processed solely as unverified football evidence; do not build health profiles, make medical conclusions, or use the data for any non-football purpose. |
+| Deletion and operations | Maintain provenance, an immediate kill switch, rate/cost telemetry, and minimal retention. No scraping or unofficial fallback is permitted. |
+| Status | `permitted` for the private/internal prototype using the official X API only. |
 
-An approval limited to reading posts, or a paid API plan, is not sufficient. The written use-case decision must cover player health/availability extraction, derived structured signals, storage, multi-source reconciliation, commercial decision support, display, and any external processor.
+This policy is the project owner's decision for internal prototype use. It is not approval to release, sell, redistribute, or expose the resulting content publicly.
 
 ### 4.4 X scraping or unofficial access
 

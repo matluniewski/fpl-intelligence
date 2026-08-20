@@ -132,8 +132,9 @@ The MVP may use deliberately limited, transparent projection and recommendation 
 
 #### C. Curated news monitoring
 
-- Ingest centrally from a small allowlist of permitted `NewsSource` implementations.
-- Support official club sources, manager press-conference sources, trusted reporters, official X API access, and licensed sports/news providers only after the relevant access method is approved.
+- Ingest centrally from a small allowlist of configured `NewsSource` implementations.
+- The internal prototype may use the official X API as an early-signal source and process its responses into normalized items, claims, evidence, and decision inputs. It is not a public/commercial-release approval or a licence to scrape X.
+- Other sources remain opt-in adapters and must have an explicit access method before use.
 - Reuse normalized ingestion across relevant users.
 - Preserve source reference, provenance, and freshness.
 
@@ -466,13 +467,11 @@ The screenshot, extracted candidate, confirmed `TeamState`, audit metadata, and 
 
 ### External sources
 
-- Technical accessibility does not imply commercial-use permission.
-- No source is enabled for production until its access, storage, display, attribution, redistribution, retention, and external-LLM processing constraints are understood.
-- X access uses only an official or otherwise explicitly permitted method; no scraping fallback is allowed.
-- Raw external content is retained only where necessary and permitted.
-- Unresolved permissions disable that source rather than being treated as consent.
-- FPL-45 owns the detailed [News Source Compliance Register](./NEWS_SOURCE_COMPLIANCE.md); engineering documentation must not claim a legal conclusion.
-- The initial FPL-22 allowlist is limited to synthetic fixtures and tightly controlled first-party or expressly licensed research items. No live third-party source is currently approved.
+- This private project may enable the official X API under the internal policy in [NEWS_SOURCE_COMPLIANCE.md](./NEWS_SOURCE_COMPLIANCE.md), including processing responses into structured football signals. This decision does not cover a public or commercial release.
+- X access uses the official API only; no scraping fallback is allowed.
+- Keep raw external content to the minimum needed for the prototype and do not commit it to the repository.
+- Other sources remain disabled until an explicit access path is configured.
+- The project does not process users' medical or health data. Player availability or injury statements are treated as unverified football evidence, never as medical advice or a user-health profile.
 
 ### FPL and football data
 

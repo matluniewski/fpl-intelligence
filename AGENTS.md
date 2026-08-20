@@ -73,12 +73,12 @@ Read [the architecture](docs/ARCHITECTURE.md) before changing module boundaries,
 
 ## Security, privacy, and compliance
 
-- Never commit or paste secrets, credentials, cookies, tokens, private keys, real screenshots, raw provider payloads, personal data, or unnecessary player health/news content into code, fixtures, logs, issues, CI artifacts, pull requests, or review comments.
+- Never commit or paste secrets, credentials, cookies, tokens, private keys, real screenshots, raw provider payloads, or personal data into code, fixtures, logs, issues, CI artifacts, pull requests, or review comments.
 - Treat screenshots and equivalent derivatives as ephemeral by default. Do not log, persist, back up, analyze, or retain them beyond the explicitly approved flow and retention rules in [SCREENSHOT_PRIVACY.md](docs/SCREENSHOT_PRIVACY.md).
 - Use synthetic, redacted, or explicitly approved fixtures. Never turn a failed upload or production payload into a fixture by convenience.
 - Validate all external inputs at the trust boundary and fail closed when permission, retention, deletion, commercial rights, or processing terms are unknown.
 - Do not assume public availability, attribution, a subscription, technical API access, or LLM summarization grants commercial or reuse rights.
-- Do not scrape X, websites, search results, or browser sessions. Do not use unofficial FPL endpoints, FPL credentials, session cookies, browser automation, or an unapproved fallback source.
+- Do not scrape X content, X search results, or authenticated X browser sessions. The internal project may retrieve and process responses from the official X API under the policy recorded in [NEWS_SOURCE_COMPLIANCE.md](docs/NEWS_SOURCE_COMPLIANCE.md). Do not use unofficial FPL endpoints, FPL credentials, session cookies, browser automation, or an unapproved fallback source.
 - Preserve upstream provenance and source restrictions; never launder provider data through a normalized model.
 - Follow [NEWS_SOURCE_COMPLIANCE.md](docs/NEWS_SOURCE_COMPLIANCE.md) for source enablement, external-LLM processing, retention, display, correction, deletion, and kill-switch requirements.
 - Apply least privilege, environment isolation, content-free structured logging, and explicit rate, quota, and variable-cost budgets when an owning issue introduces external services.
