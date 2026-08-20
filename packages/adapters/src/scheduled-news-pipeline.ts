@@ -26,6 +26,7 @@ export interface ScheduledNewsPipelinePort {
 
 export interface ScheduledNewsPipelineSnapshot {
   readonly policyId: SourcePolicyId;
+  readonly lastCompletedRunId: string | null;
   readonly lastSuccessAt: UtcInstant | null;
   readonly lastFailureAt: UtcInstant | null;
   readonly nextEligibleAt: UtcInstant | null;
@@ -85,6 +86,7 @@ export class ScheduledNewsPipeline {
     request: ScheduledNewsPipelineRequest,
   ): Promise<ScheduledNewsPipelineSnapshot> {
     const prior = this.#states.get(request.policyId);
+    if (prior?.lastCompletedRunId === request.runId) return prior;
     if (
       prior?.nextEligibleAt !== null &&
       prior?.nextEligibleAt !== undefined &&
@@ -95,6 +97,7 @@ export class ScheduledNewsPipeline {
       const result = await this.#options.pipeline.run(request);
       const snapshot = Object.freeze({
         policyId: request.policyId,
+        lastCompletedRunId: request.runId,
         lastSuccessAt: this.#options.clock.now(),
         lastFailureAt: prior?.lastFailureAt ?? null,
         nextEligibleAt: null,
@@ -119,6 +122,7 @@ export class ScheduledNewsPipeline {
       const now = this.#options.clock.now();
       const snapshot = Object.freeze({
         policyId: request.policyId,
+        lastCompletedRunId: prior?.lastCompletedRunId ?? null,
         lastSuccessAt: prior?.lastSuccessAt ?? null,
         lastFailureAt: now,
         nextEligibleAt: at(now, delay),

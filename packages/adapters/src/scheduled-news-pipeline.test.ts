@@ -10,7 +10,7 @@ const policyId = createSourcePolicyId("news.synthetic.fixture.v1");
 const now = createUtcInstant("2026-08-20T12:00:00Z");
 
 describe("scheduled news pipeline", () => {
-  it("records shared success and prevents duplicate execution before eligibility", async () => {
+  it("records shared success and makes completed scheduled runs idempotent", async () => {
     let calls = 0;
     const runner = new ScheduledNewsPipeline({
       pipeline: {
@@ -35,9 +35,11 @@ describe("scheduled news pipeline", () => {
       consecutiveFailures: 0,
     });
     expect(runner.snapshot(policyId)?.recordsReused).toBe(2);
+    await runner.run(request);
+    expect(calls).toBe(1);
   });
 
-  it("uses exponential backoff for transient failures and bounded permanent failure delay", async () => {
+  it("uses exponential backoff and does not retry before a transient failure is eligible", async () => {
     const transient = new ScheduledNewsPipeline({
       pipeline: {
         run: async () => {
@@ -61,6 +63,36 @@ describe("scheduled news pipeline", () => {
       consecutiveFailures: 1,
       lastFailureKind: "transient",
       nextEligibleAt: "2026-08-20T12:00:01.000Z",
+    });
+    await expect(
+      transient.run({ ...request, runId: "run-3" }),
+    ).resolves.toMatchObject({
+      consecutiveFailures: 1,
+    });
+  });
+
+  it("applies the bounded delay to permanent failures", async () => {
+    const runner = new ScheduledNewsPipeline({
+      pipeline: {
+        run: async () => {
+          throw new NewsIngestionError("quota_rejected", "synthetic");
+        },
+      },
+      clock: { now: () => now },
+      baseBackoffMs: 1_000,
+      maximumBackoffMs: 8_000,
+    });
+    await expect(
+      runner.run({
+        policyId,
+        environment: "test",
+        scheduledAt: now,
+        runId: "run-4",
+      }),
+    ).rejects.toMatchObject({ code: "quota_rejected" });
+    expect(runner.snapshot(policyId)).toMatchObject({
+      lastFailureKind: "permanent",
+      nextEligibleAt: "2026-08-20T12:00:08.000Z",
     });
   });
 });
