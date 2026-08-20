@@ -52,6 +52,24 @@ Evidence relates a Claim to permitted source metadata. It records supporting, co
 
 An unresolved conflict is a valid result. The contract does not silently choose truth, infer confidence from source type, or manufacture a probability. Future-dated effective windows are valid for scheduled events; inverted windows are rejected.
 
+## Evidence Engine v0
+
+FPL-59 implements a deterministic domain-only resolver. At a supplied UTC
+evaluation time it considers only player availability Claims with active,
+permitted Evidence, evaluates the manually reviewed source tier in the declared
+context, and scores directness and certainty once per caller-supplied
+independence key. Entries that share an independence key are dependent or
+syndicated and never add corroboration.
+
+The resolver emits a `NewsSignal`, `PlayerAvailabilityState`, and structured
+reason codes. Conflicting states, stale/expired material, low scores,
+unapproved source contexts, blocked policy, or missing/inactive Evidence yield
+an explicit conservative unresolved result. Stale eligible records retain their
+Claim, Evidence, and provenance references for auditability but do not affect
+the current resolution. Rules, source-catalog version, evaluation time, and all
+material references remain on the result; provider DTO and LLM types do not
+enter the contract.
+
 ## PlayerAvailabilityState
 
 `PlayerAvailabilityState` is the provider-independent boundary consumed by projection behavior. It contains availability, optional expected-start probability and expected minutes, explicit assumptions, confidence, freshness, conflict state, effective window, signal/evidence lineage, provenance, and rule version.
