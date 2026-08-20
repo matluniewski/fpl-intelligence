@@ -10,9 +10,10 @@ import {
   type CandidateField,
   type FootballReferenceDataPort,
   type FplMoney,
+  type TeamState,
   type TeamStateCandidate,
   type TeamStateCandidateStore,
-  type TeamStateStore,
+  type TeamStateConfirmationStore,
   type VisionTeamStateCandidatePort,
 } from "@fpl-intelligence/domain";
 import {
@@ -73,29 +74,51 @@ function service(
   options: {
     readonly candidate?: TeamStateCandidate;
     readonly visionFails?: boolean;
+    readonly usageFails?: boolean;
+    readonly clockNow?: ReturnType<typeof createUtcInstant>;
   } = {},
 ) {
   const candidates = new Map<string, TeamStateCandidate>();
-  const states = new Map<string, ReturnType<TeamStateStore["getById"]>>();
+  const states = new Map<string, TeamState>();
   const deleted: string[] = [];
   const expirations: string[] = [];
   const events: VisionUsageEvent[] = [];
   const candidate = options.candidate ?? createSyntheticCandidate();
   const candidateStore: TeamStateCandidateStore = {
     save: async (value) => {
+      const existing = candidates.get(value.id);
+      if (existing !== undefined && existing !== value)
+        throw new Error("Candidate already exists with different content.");
       candidates.set(value.id, value);
+    },
+    replace: async (value, expected) => {
+      if (candidates.get(value.id) !== expected) return false;
+      candidates.set(value.id, value);
+      return true;
     },
     getById: async (id) => candidates.get(id) ?? null,
     delete: async (id) => {
       candidates.delete(id);
     },
   };
-  const teamStates: TeamStateStore = {
-    saveConfirmed: async (value) => {
-      states.set(value.id, Promise.resolve(value));
+  const confirmations: TeamStateConfirmationStore = {
+    saveConfirmedAndConsumeCandidate: async (value, expectedCandidate) => {
+      const candidateToConsume = candidates.get(value.candidateId);
+      if (
+        candidateToConsume === undefined ||
+        candidateToConsume !== expectedCandidate
+      ) {
+        const existing = [...states.values()].find(
+          (state) => state.candidateId === value.candidateId,
+        );
+        return existing?.id === value.id
+          ? "confirmed"
+          : "candidate_not_available";
+      }
+      candidates.delete(value.candidateId);
+      states.set(value.id, value);
+      return "confirmed";
     },
-    getById: async (id) => (await states.get(id)) ?? null,
-    getLatest: async () => null,
   };
   const screenshots: EphemeralScreenshotStore = {
     accept: async (input) => {
@@ -129,18 +152,21 @@ function service(
   const usage: VisionUsageRecorder = {
     record: async (event) => {
       events.push(event);
+      if (options.usageFails) throw new Error("telemetry unavailable");
     },
   };
   return {
     sut: new TeamStateImportService({
       candidates: candidateStore,
-      teamStates,
+      confirmations,
       screenshots,
       imageDecoder,
       vision,
       referenceData,
       usage,
+      clock: { now: () => options.clockNow ?? SYNTHETIC_NOW },
     }),
+    candidateStore,
     candidates,
     states,
     deleted,
@@ -284,9 +310,38 @@ describe("TeamStateImportService", () => {
     expect(test.events[0]).toMatchObject({ outcome: "failed" });
   });
 
+  it("deletes a screenshot when usage telemetry fails after extraction", async () => {
+    const test = service({ usageFails: true });
+    await expect(
+      test.sut.extractScreenshot({
+        bytes: new Uint8Array([1]),
+        request: {
+          intendedGameweekId: SYNTHETIC_GAMEWEEK_ID,
+          requestedAt: SYNTHETIC_NOW,
+        },
+        usage: visionUsage,
+      }),
+    ).rejects.toThrow("telemetry unavailable");
+    expect(test.deleted).toEqual(["test-artifact"]);
+    expect(test.candidates.size).toBe(0);
+  });
+
+  it("derives the screenshot TTL from a trusted boundary clock", async () => {
+    const test = service();
+    await test.sut.extractScreenshot({
+      bytes: new Uint8Array([1]),
+      request: {
+        intendedGameweekId: SYNTHETIC_GAMEWEEK_ID,
+        requestedAt: createUtcInstant("2030-01-01T00:00:00Z"),
+      },
+      usage: visionUsage,
+    });
+    expect(test.expirations).toEqual(["2026-08-18T13:00:00.000Z"]);
+  });
+
   it("persists a user correction before confirmation", async () => {
     const test = service();
-    await test.sut.saveManualCandidate(test.candidate);
+    await test.candidateStore.save(test.candidate);
     const correctedAt = createUtcInstant("2026-08-18T12:01:00Z");
     const corrected = await test.sut.revise(
       test.candidate.id,
@@ -308,7 +363,7 @@ describe("TeamStateImportService", () => {
       bank: missingField<FplMoney>("not visible"),
     };
     const blocked = service({ candidate: incomplete });
-    await blocked.sut.saveManualCandidate(incomplete);
+    await blocked.candidateStore.save(incomplete);
     const blockedResult = await blocked.sut.confirm({
       candidateId: incomplete.id,
       teamStateId: createTeamStateId("blocked"),
@@ -322,7 +377,7 @@ describe("TeamStateImportService", () => {
     expect(blocked.states.size).toBe(0);
 
     const manual = service();
-    await manual.sut.saveManualCandidate(manual.candidate);
+    await manual.candidateStore.save(manual.candidate);
     await expect(
       manual.sut.confirm({
         candidateId: manual.candidate.id,
@@ -331,6 +386,15 @@ describe("TeamStateImportService", () => {
       }),
     ).resolves.toEqual({ ok: true });
     expect(manual.candidates.size).toBe(0);
+    expect(manual.states.size).toBe(1);
+
+    await expect(
+      manual.sut.confirm({
+        candidateId: manual.candidate.id,
+        teamStateId: createTeamStateId("competing-confirmation"),
+        confirmedAt: createUtcInstant("2026-08-18T12:02:00Z"),
+      }),
+    ).resolves.toEqual({ ok: false, reason: "not_found" });
     expect(manual.states.size).toBe(1);
   });
 
