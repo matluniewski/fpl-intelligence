@@ -17,6 +17,7 @@ Start with:
 - [External data provenance architecture](docs/DATA_PROVENANCE.md)
 - [FPL and Premier League data licensing review](docs/FPL_DATA_LICENSING.md)
 - [Development-only provider research](docs/DEVELOPMENT_PROVIDER_RESEARCH.md)
+- [X API compliance research](docs/X_API_COMPLIANCE_RESEARCH.md)
 - [Provider usage and cost telemetry architecture](docs/COST_TELEMETRY.md)
 - [Recommendation contract](docs/RECOMMENDATIONS.md)
 - [Development guide](docs/DEVELOPMENT.md)
