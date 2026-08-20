@@ -36,6 +36,10 @@ FPL-22 adds central, shared ingestion for the project-authored `news.synthetic.f
 
 See [`docs/NEWS_INGESTION.md`](../../docs/NEWS_INGESTION.md) for the allowlist, policy controls, lifecycle behavior, and deferred decisions.
 
+## Claim extraction
+
+FPL-26 adds `ClaimExtractionPipeline`, a provider-neutral boundary where an external model adapter can return only untrusted output. The pipeline resolves a player deterministically, validates each candidate through the domain contracts, and then produces an unresolved `Claim` with traceable `Evidence`. A multi-player output is processed candidate by candidate; malformed output, model failure, and unresolved identities are quarantined. It neither resolves a `NewsSignal` nor alters projections or recommendations.
+
 - `resolvePlayerIdentity` performs deterministic normalized-name matching, optionally narrowed by team and position, and returns ambiguous/not-found states instead of fuzzy guessing.
 
 The fixture exported from `@fpl-intelligence/adapters/testing` is synthetic and is suitable only for tests, local development, and clearly labelled demonstrations.
