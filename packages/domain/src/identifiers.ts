@@ -11,6 +11,7 @@ export type SeasonId = Identifier<"SeasonId">;
 export type RulesetId = Identifier<"RulesetId">;
 export type TeamStateCandidateId = Identifier<"TeamStateCandidateId">;
 export type TeamStateId = Identifier<"TeamStateId">;
+export type WatchlistId = Identifier<"WatchlistId">;
 export type SquadSlotId = Identifier<"SquadSlotId">;
 export type ProvenanceId = Identifier<"ProvenanceId">;
 export type SourceId = Identifier<"SourceId">;
@@ -54,6 +55,8 @@ export const createTeamStateCandidateId = (
 ): TeamStateCandidateId => createIdentifier(value, "TeamStateCandidateId");
 export const createTeamStateId = (value: string): TeamStateId =>
   createIdentifier(value, "TeamStateId");
+export const createWatchlistId = (value: string): WatchlistId =>
+  createIdentifier(value, "WatchlistId");
 export const createSquadSlotId = (value: string): SquadSlotId =>
   createIdentifier(value, "SquadSlotId");
 export const createProvenanceId = (value: string): ProvenanceId =>
