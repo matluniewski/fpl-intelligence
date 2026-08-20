@@ -4,7 +4,7 @@ Status: initial engineering baseline
 
 Owner: FPL-13
 
-Last updated: 2026-08-19
+Last updated: 2026-08-20
 
 ## 1. Purpose
 
@@ -24,6 +24,21 @@ Enable the package manager shim once if needed:
 ```bash
 corepack enable
 ```
+
+On Windows, open a new terminal after installing or updating Node.js so its
+updated `PATH` is inherited. Confirm the pinned toolchain before installing
+dependencies or running checks:
+
+```powershell
+node --version # v24.19.0 or another supported Node.js 24 LTS version
+pnpm --version # 10.33.4
+pnpm check
+```
+
+If `pnpm` reports that `node.exe` cannot be found, install the repository's
+pinned Node.js 24 LTS release and reopen the terminal. Do not work around this
+with a user-profile `PATH` override, a repository-specific Node binary, or npm
+or Yarn.
 
 Do not use npm or Yarn to modify dependencies. `pnpm-lock.yaml` is the only JavaScript dependency lockfile.
 
@@ -83,6 +98,10 @@ Run commands from the repository root unless a troubleshooting step explicitly r
 | `pnpm db:migrate`   | Apply version-controlled Drizzle migrations.           |
 | `pnpm db:test`      | Run the PostgreSQL connection smoke test.              |
 | `pnpm db:down`      | Stop the local PostgreSQL container.                   |
+
+`pnpm check` always runs `pnpm typecheck` before `pnpm build`. The Next.js build
+does not repeat this check, which keeps the production-build command compatible
+with the Codex workspace sandbox while retaining the required type-safety gate.
 
 The web workspace also exposes `lint:fix` and `test:watch`. The domain, adapter, and projection workspaces expose focused test commands; domain, adapter, and projection packages also expose synthetic-fixture entry points for contract work.
 
