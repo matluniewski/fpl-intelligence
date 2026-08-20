@@ -25,3 +25,19 @@ All values are rounded to six decimal places at component boundaries. The output
 - Reward rules must be non-negative and penalty rules non-positive; scoring categories not represented by model v0 are explicitly assumed to contribute zero.
 - `news_adjustments_excluded` is an explicit baseline assumption. A later signal layer may create a separate adjusted projection without rewriting this baseline.
 - Exact live scoring rules, input calibration, and source/provider selection remain external versioned inputs.
+
+## Availability adjustment v0
+
+FPL-31 adds `applyAvailabilityToProjection`, a separate deterministic layer
+that takes a baseline projection input and a provider-independent
+`PlayerAvailabilityState`. When the state is current, unconflicted, medium or
+high confidence, traceable, and available at the projection evaluation time,
+it caps expected minutes and appearance/start/60-minute probabilities per
+fixture. The returned value preserves both the original baseline and the
+separate adjusted projection, with NewsSignal, Claim, Evidence, provenance,
+rule, and evaluation-time references.
+
+Missing, expired, conflicted, low-confidence, incomplete, player-mismatched,
+or future-evaluated availability states leave the baseline unchanged and return
+a conservative reason code. The package does not import a NewsSource, Evidence
+Engine implementation, provider DTO, or LLM.
