@@ -24,7 +24,10 @@ import {
 } from "./reference-data";
 
 export type CandidateOriginKind =
-  "manual_entry" | "screenshot_extraction" | "external_import";
+  | "manual_entry"
+  | "user_correction"
+  | "screenshot_extraction"
+  | "external_import";
 
 export interface FieldOrigin {
   readonly kind: CandidateOriginKind;
@@ -216,6 +219,33 @@ export function createManualFieldOrigin(capturedAt: UtcInstant): FieldOrigin {
     capturedAt,
     confidence: NOT_ASSESSED_CONFIDENCE,
     provenanceRefs: Object.freeze([]),
+  });
+}
+
+export function createUserCorrectionFieldOrigin(
+  capturedAt: UtcInstant,
+): FieldOrigin {
+  return Object.freeze({
+    kind: "user_correction",
+    capturedAt,
+    confidence: NOT_ASSESSED_CONFIDENCE,
+    provenanceRefs: Object.freeze([]),
+  });
+}
+
+export function createScreenshotFieldOrigin(input: {
+  readonly capturedAt: UtcInstant;
+  readonly confidence: Confidence;
+  readonly provenanceRefs?: readonly ProvenanceId[];
+}): FieldOrigin {
+  if (input.confidence.band === "not_assessed") {
+    throw new RangeError("Screenshot extraction confidence must be assessed.");
+  }
+  return Object.freeze({
+    kind: "screenshot_extraction",
+    capturedAt: input.capturedAt,
+    confidence: input.confidence,
+    provenanceRefs: Object.freeze([...(input.provenanceRefs ?? [])]),
   });
 }
 
