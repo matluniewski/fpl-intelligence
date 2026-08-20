@@ -2,9 +2,9 @@
 
 Status: implemented synthetic and restricted first-party boundaries
 
-Owner: FPL-22
+Owner: FPL-22, FPL-30
 
-Last updated: 2026-08-18
+Last updated: 2026-08-20
 
 ## Scope
 
@@ -60,6 +60,12 @@ Every newly stored item persists a separate provenance record describing the sou
 
 If telemetry storage fails after a valid source read, the result carries `usage_telemetry_unavailable`. If both ingestion and telemetry fail, the typed ingestion error carries that visibility. Missing telemetry is never reported as zero usage.
 
+## Scheduling and operational state
+
+`ScheduledNewsPipeline` is a provider-neutral shared orchestration boundary; an approved job runtime may invoke it, but is deliberately not selected here. A completed `runId` is idempotent per policy, so scheduler delivery retries do not start a second ingestion pass. The underlying coordinator retains its separate cache and persistent normalized-record deduplication.
+
+The snapshot exposes the last successful and failed execution, retry eligibility, consecutive failures, and stored/reused/quarantined counts without retaining source content. Timeouts, rate limits, and source failures use bounded exponential backoff. Quota and policy failures use the bounded delay and remain visibly permanent. This gives an operational caller enough information to calculate freshness and trigger content-free alerts, while preserving the coordinator's typed usage telemetry and quota outcomes.
+
 ## Deferred decisions
 
-A live source, transport, persistence implementation, scheduler, queue, telemetry provider, and LLM are deliberately unselected. Each requires its owning issue, an updated compliance decision, and an ADR when the choice creates a consequential operational commitment.
+A live source, transport, persistence implementation, job runtime, queue, telemetry provider, and LLM are deliberately unselected. Each requires its owning issue, an updated compliance decision, and an ADR when the choice creates a consequential operational commitment.
