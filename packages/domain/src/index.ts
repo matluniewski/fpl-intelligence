@@ -1,4 +1,5 @@
 export * from "./identifiers";
+export * from "./evidence-engine";
 export * from "./news-intelligence";
 export * from "./news-intelligence-factory";
 export * from "./ports";
