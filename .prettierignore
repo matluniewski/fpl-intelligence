@@ -1,5 +1,6 @@
 .next
 .pnpm-store
+.codex-worktrees
 coverage
 node_modules
 pnpm-lock.yaml
