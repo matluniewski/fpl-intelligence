@@ -120,7 +120,7 @@ All configuration must follow these rules:
 4. Validate required configuration at the application boundary and fail with a safe, actionable message.
 5. Introduce a provider credential only through an approved issue and an adapter boundary.
 
-Hosting and managed-service choices are deliberately unresolved. Record a consequential selection in `docs/adr/` when the decision is required and approved.
+Vercel and Supabase are selected for the deployment foundation by [ADR-0001](./adr/0001-vercel-and-supabase-deployment-foundation.md). Follow the [deployment guide](./DEPLOYMENT.md) for provider setup, migration, preview, production, and rollback controls. Other managed-service choices remain unresolved.
 
 ## 7. Branches and issue scope
 

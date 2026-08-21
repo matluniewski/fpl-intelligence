@@ -36,10 +36,12 @@ Start with:
 - Next.js App Router and React
 - Tailwind CSS and shadcn/ui
 - PostgreSQL and Drizzle ORM
+- Vercel deployment foundation for the Next.js application
+- Supabase deployment foundation for PostgreSQL
 - Vitest
 - GitHub Actions
 
-Playwright remains part of the planned stack and will be introduced by its owning issue. The PostgreSQL foundation is local and provider-neutral; no hosting, managed database, authentication, analytics, vision, LLM, news, or football-data provider has been selected.
+Playwright remains part of the planned stack and will be introduced by its owning issue. The PostgreSQL and deployment foundations use Supabase and Vercel respectively; domain and persistence contracts remain provider-independent. No authentication, analytics, vision, LLM, news, or football-data provider has been selected. See the [deployment guide](docs/DEPLOYMENT.md) for setup, approval gates, and rollback.
 
 ## Getting started
 
