@@ -41,7 +41,7 @@ export function PersonalizedNewsScreen({
   if (!changed || !disputed || !unchanged) return null;
 
   return (
-    <main className="min-h-screen bg-[#f6f7f9] p-4 text-[#1f1433] sm:p-8">
+    <div className="bg-[#f6f7f9] p-4 text-[#1f1433] sm:p-8">
       <div className="mx-auto max-w-[1120px]">
         <nav
           className="mb-4 flex flex-wrap gap-2"
@@ -93,7 +93,7 @@ export function PersonalizedNewsScreen({
           />
         ) : null}
       </div>
-    </main>
+    </div>
   );
 }
 
