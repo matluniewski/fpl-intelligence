@@ -50,6 +50,18 @@
 }
 
 :root {
+  --fpl-color-bg-canvas: #f6f7f9;
+  --fpl-color-bg-surface: #ffffff;
+  --fpl-color-text-primary: #171923;
+  --fpl-color-text-secondary: #6e7385;
+  --fpl-color-border-default: #e0e3eb;
+  --fpl-color-action-primary: #470d73;
+  --fpl-color-action-on-primary: #ffffff;
+  --fpl-color-focus-ring: #b8adcc;
+  --fpl-color-status-success: #00c773;
+  --fpl-color-status-success-subtle: #e0faed;
+  --fpl-color-status-warning-subtle: #fff5d6;
+  --fpl-color-status-danger-subtle: #ffe8e8;
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
