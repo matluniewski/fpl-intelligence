@@ -17,7 +17,7 @@ pnpm db:down
 
 Use `pnpm --filter @fpl-intelligence/database db:generate --name=<migration-name>` after an approved schema change. Review generated SQL and metadata before committing them. Never use `drizzle-kit push` in shared or production environments because it bypasses version-controlled migration review.
 
-The current setup selects no managed PostgreSQL provider or deployment topology. A later consequential selection requires its owning issue and an approved ADR.
+Supabase is selected as the managed PostgreSQL host for the deployment foundation in [ADR-0001](../../docs/adr/0001-vercel-and-supabase-deployment-foundation.md). This package remains provider-neutral: it uses only `DATABASE_URL` and does not import a Supabase SDK or expose provider records beyond its infrastructure boundary. See the [deployment guide](../../docs/DEPLOYMENT.md) for migration and environment controls.
 
 ## Recommendation history
 
