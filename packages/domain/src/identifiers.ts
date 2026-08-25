@@ -26,6 +26,7 @@ export type PlayerAvailabilityStateId = Identifier<"PlayerAvailabilityStateId">;
 export type RecommendationId = Identifier<"RecommendationId">;
 export type RecommendationOptionId = Identifier<"RecommendationOptionId">;
 export type RecommendationEvidenceId = Identifier<"RecommendationEvidenceId">;
+export type ActionPlanId = Identifier<"ActionPlanId">;
 
 function createIdentifier<Kind extends string>(
   value: string,
@@ -90,3 +91,5 @@ export const createRecommendationEvidenceId = (
   value: string,
 ): RecommendationEvidenceId =>
   createIdentifier(value, "RecommendationEvidenceId");
+export const createActionPlanId = (value: string): ActionPlanId =>
+  createIdentifier(value, "ActionPlanId");
