@@ -3,6 +3,7 @@ export * from "./evidence-engine";
 export * from "./news-intelligence";
 export * from "./news-intelligence-factory";
 export * from "./news-relevance";
+export * from "./news-recommendation-impact";
 export * from "./ports";
 export * from "./primitives";
 export * from "./provenance";
