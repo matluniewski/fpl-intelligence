@@ -86,6 +86,12 @@ Comparable history is keyed by confirmed team identity, recommendation kind, con
 
 Snapshots contain normalized references and structured recommendation output only. They do not persist screenshots, provider DTOs, credentials, or unnecessary raw news content. Expiry deletion requires an explicit caller-supplied evaluation time and a per-record `retainUntil` value; scheduling remains outside this persistence boundary.
 
+## News-driven recommendation impact v0
+
+FPL-62 adds a deterministic comparison contract for one player's baseline and news-adjusted decision inputs. It records expected minutes, start probability, projected points, ordinal confidence, recommendation status, captaincy suitability, materiality reasons, and the evaluation horizon. It preserves the exact NewsSignal, PlayerAvailabilityState, Claim, Evidence, and provenance references that caused a material transition.
+
+The evaluator does not select a transfer, captain, or other action. An upstream deterministic producer may attach at most one already-evaluated fallback option reference with an expected-points delta and reason code. Unresolved conflicts, expired inputs, or out-of-window evidence yield `withheld`, rather than an unsupported conclusion. A fresh signal can therefore produce a useful explicit `unchanged` result.
+
 ## Synthetic examples
 
 The domain testing entry point exposes project-authored synthetic examples covering:
