@@ -14,7 +14,7 @@ The deployment does not add Supabase Auth, Storage, Realtime, Edge Functions, or
 
 ## Architecture and configuration
 
-`vercel.json` configures Vercel at the repository root and identifies `apps/web` as the project Root Directory. It installs from the committed pnpm lockfile and builds only `@fpl-intelligence/web`; Vercel detects the Next.js framework from that application directory. The web build uses webpack to support this pnpm workspace layout in Vercel's isolated build environment.
+`vercel.json` configures Vercel at the repository root. The Vercel project's **Root Directory** setting identifies `apps/web`; it is a project setting, not a valid `vercel.json` property. Vercel installs from the committed pnpm lockfile and builds only `@fpl-intelligence/web`; it detects the Next.js framework from that application directory. The web build uses webpack to support this pnpm workspace layout in Vercel's isolated build environment.
 
 The database package remains provider-neutral. Its version-controlled Drizzle migrations in `packages/database/drizzle/` are the sole schema source of truth. Apply them to Supabase with `pnpm db:migrate`; do not use `drizzle-kit push` or edit application schema through the Supabase dashboard.
 
