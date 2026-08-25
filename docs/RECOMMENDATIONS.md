@@ -78,6 +78,12 @@ Recommendations are immutable snapshots. Recomputing after a material input chan
 
 Compatible additions still require consumer review when they change rendering, persistence, ranking, or safety behavior. Consequential changes to trust boundaries or account actions require an approved issue and, where applicable, an ADR.
 
+## Manual action plans
+
+An `ActionPlan` is a separate immutable record of a user's internal approval of a recommendation option. It retains its own identifier, recommendation and option references, confirmed team-state reference, approval time, and ordered instructions. Its instruction set supports the recommendation actions used for transfers, captaincy, and bench order, plus explicit `hold` and `wait` instructions with a scope, gameweek, and reason code.
+
+The MVP `ManualFplActionProvider` is deliberately limited to `prepareHandoff`. It returns structured steps, an explicit `internal_only` approval scope, and the official FPL URL for optional user navigation. It has no credential, cookie, authentication, remote-write, execution, or verification operation. The user performs and verifies every action in the official interface. A future official-action provider remains subject to FPL-56 clearance and the architecture approval gate.
+
 ## Snapshot persistence and comparison
 
 The database boundary stores each validated recommendation as an immutable snapshot together with the confirmed `TeamState` version, baseline/current projection versions, projection-input version, rules and algorithm identities, news-signal/availability/Claim/Evidence references, confidence methodology, planning horizon, recording time, and retention-policy version.

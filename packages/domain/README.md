@@ -14,6 +14,7 @@ This package contains framework-independent contracts, invariants, and determini
 - Domain behavior receives time as a UTC value and never reads the machine clock.
 - RawNewsItem, Claim, Evidence, NewsSignal, and PlayerAvailabilityState remain distinct provider-independent artifacts.
 - Recommendations are immutable decision-support snapshots with proposed actions only. This package cannot execute an FPL action.
+- Action plans record a user's internal approval and produce a deterministic manual handoff only; they cannot authenticate with or mutate FPL.
 
 ## Entry points
 
@@ -45,3 +46,7 @@ See [docs/NEWS_INTELLIGENCE_CONTRACTS.md](../../docs/NEWS_INTELLIGENCE_CONTRACTS
 Equal ranking values use an explicit tie-break key and stable option identifier. Overall confidence is the lowest explicit factor band; it is not presented as a probability. Unsupported values, unclear licensing, broken evidence references, inconsistent impact arithmetic, and invalid action combinations fail with typed validation issues.
 
 The complete contract and compatibility policy are documented in [docs/RECOMMENDATIONS.md](../../docs/RECOMMENDATIONS.md).
+
+## Manual action handoff
+
+`ActionPlan` snapshots a reviewed recommendation option, confirmed team state, approval time, and technical FPL instructions. It supports transfer, captaincy, bench, hold, and wait instructions without becoming an optimizer. `StaticManualFplActionProvider` returns structured steps and the official FPL URL only. It has no authentication or execution operation; opening the URL and every FPL action remain manual.

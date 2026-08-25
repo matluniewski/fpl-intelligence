@@ -1,10 +1,13 @@
 import type {
+  ActionPlanId,
   EphemeralArtifactId,
   SeasonId,
   TeamStateCandidateId,
   TeamStateId,
   WatchlistId,
 } from "./identifiers";
+import type { ActionPlan } from "./action-plan";
+import type { ManualFplActionHandoff } from "./manual-fpl-action-provider";
 import type { RawNewsItem } from "./news-intelligence";
 import type { UtcInstant } from "./primitives";
 import type { GameweekId, ReferenceDataSnapshot } from "./reference-data";
@@ -88,4 +91,18 @@ export interface TeamStateConfirmationStore {
 export interface WatchlistStore {
   getById(id: WatchlistId): Promise<Watchlist | null>;
   save(watchlist: Watchlist): Promise<void>;
+}
+
+/** Records an internally approved plan; it never stores FPL credentials. */
+export interface ActionPlanStore {
+  saveApproved(actionPlan: ActionPlan): Promise<void>;
+  getById(id: ActionPlanId): Promise<ActionPlan | null>;
+}
+
+/**
+ * The manual provider returns instructions and the official navigation target
+ * only. It has no authority to authenticate or mutate an FPL account.
+ */
+export interface FplActionProvider {
+  prepareHandoff(actionPlan: ActionPlan): Promise<ManualFplActionHandoff>;
 }
