@@ -41,6 +41,8 @@ See [docs/NEWS_INTELLIGENCE_CONTRACTS.md](../../docs/NEWS_INTELLIGENCE_CONTRACTS
 
 `createRecommendation` validates and deterministically ranks lineup, captaincy, or transfer-plan options. It retains gross and net impact, hits, horizons, assumptions, constraints, risks, confidence factors, structured explanations, conflicting evidence, provenance, commercial-use state, and material-change triggers.
 
+`evaluateNewsRecommendationImpact` compares normalized baseline and news-adjusted decision inputs for a player. It exposes changed, unchanged, and withheld outcomes with materiality reasons and full news lineage; it neither fetches sources nor generates an FPL action.
+
 Equal ranking values use an explicit tie-break key and stable option identifier. Overall confidence is the lowest explicit factor band; it is not presented as a probability. Unsupported values, unclear licensing, broken evidence references, inconsistent impact arithmetic, and invalid action combinations fail with typed validation issues.
 
 The complete contract and compatibility policy are documented in [docs/RECOMMENDATIONS.md](../../docs/RECOMMENDATIONS.md).
