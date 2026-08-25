@@ -9,7 +9,7 @@
   },
   "scripts": {
     "build": "pnpm --workspace-concurrency=1 --filter @fpl-intelligence/domain --filter @fpl-intelligence/application --filter @fpl-intelligence/adapters --filter @fpl-intelligence/database --filter @fpl-intelligence/projection --filter @fpl-intelligence/web build",
-    "check": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm test && pnpm build",
+    "check": "pnpm validation:preflight && pnpm format:check && pnpm lint && pnpm typecheck && pnpm test && pnpm build",
     "dev": "pnpm --filter @fpl-intelligence/web dev",
     "db:down": "docker compose down",
     "db:migrate": "pnpm --filter @fpl-intelligence/database db:migrate",
@@ -19,7 +19,8 @@
     "format:check": "prettier --check .",
     "lint": "pnpm --workspace-concurrency=1 --filter @fpl-intelligence/domain --filter @fpl-intelligence/application --filter @fpl-intelligence/adapters --filter @fpl-intelligence/database --filter @fpl-intelligence/projection --filter @fpl-intelligence/web lint",
     "test": "pnpm --workspace-concurrency=1 --filter @fpl-intelligence/domain test && pnpm --workspace-concurrency=1 --filter @fpl-intelligence/application test && pnpm --workspace-concurrency=1 --filter @fpl-intelligence/adapters test && pnpm --workspace-concurrency=1 --filter @fpl-intelligence/database test && pnpm --workspace-concurrency=1 --filter @fpl-intelligence/projection test && pnpm --workspace-concurrency=1 --filter @fpl-intelligence/web test",
-    "typecheck": "pnpm --workspace-concurrency=1 --filter @fpl-intelligence/domain --filter @fpl-intelligence/application --filter @fpl-intelligence/adapters --filter @fpl-intelligence/database --filter @fpl-intelligence/projection --filter @fpl-intelligence/web typecheck"
+    "typecheck": "pnpm --workspace-concurrency=1 --filter @fpl-intelligence/domain --filter @fpl-intelligence/application --filter @fpl-intelligence/adapters --filter @fpl-intelligence/database --filter @fpl-intelligence/projection --filter @fpl-intelligence/web typecheck",
+    "validation:preflight": "node scripts/verify-stage-0-preflight.mjs"
   },
   "devDependencies": {
     "prettier": "^3.6.2"
