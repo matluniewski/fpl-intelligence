@@ -92,6 +92,8 @@ FPL-62 adds a deterministic comparison contract for one player's baseline and ne
 
 The evaluator does not select a transfer, captain, or other action. An upstream deterministic producer may attach at most one already-evaluated fallback option reference with an expected-points delta and reason code. Unresolved conflicts, expired inputs, or out-of-window evidence yield `withheld`, rather than an unsupported conclusion. A fresh signal can therefore produce a useful explicit `unchanged` result.
 
+FPL-51 compares each snapshot to the previous comparable snapshot, rather than a calendar date. Its structured explanation is constrained to recorded TeamState and projection versions, normalized news references, recommendation output, confidence factors, and explicitly supplied FPL-62 impact records. It distinguishes added from removed signals and reports no cause when the evidence does not establish one.
+
 ## Synthetic examples
 
 The domain testing entry point exposes project-authored synthetic examples covering:
