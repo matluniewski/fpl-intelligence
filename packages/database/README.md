@@ -25,6 +25,8 @@ Supabase is selected as the managed PostgreSQL host for the deployment foundatio
 
 Retention is explicit and versioned. Records without a `retainUntil` value are not removed by the repository; records with a deadline are deleted only through `deleteExpired(asOf)` using a caller-supplied evaluation time. The package does not run an implicit retention scheduler.
 
+`explainRecommendationChange` compares a current snapshot with its previous comparable snapshot. It reports only version, reference, output, confidence, and caller-supplied news-impact differences evidenced by the snapshots; it does not infer source causality or generate user-facing prose. Added and removed signal references remain distinct, so expiry/correction behavior is not presented as a new signal.
+
 ## News intelligence state
 
 FPL-28 persists `RawNewsItem`, `Claim`, `Evidence`, `NewsSignal`, and
