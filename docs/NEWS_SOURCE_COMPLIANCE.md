@@ -4,7 +4,7 @@ Status: Engineering and product compliance baseline; not legal advice
 
 Owner: FPL-45
 
-Last updated: 2026-08-18
+Last updated: 2026-08-26
 
 ## 1. Purpose
 
@@ -125,24 +125,24 @@ The `news.first-party.research.v1` path must be disabled by default. Enabling it
 
 For live, public, or commercial use, an approval limited to reading posts, or a paid API plan, is not sufficient. The written use-case decision must cover player health/availability extraction, derived structured signals, storage, multi-source reconciliation, commercial decision support, display, and any external processor.
 
-### 4.4 X scraping or unofficial access
+### 4.4 Public-source research collection
 
 | Field | Decision |
 | --- | --- |
-| Provider and access | X website or content reached through browser scraping, browser automation, reverse-engineered endpoints, unofficial APIs, copied exports, or third-party datasets without a verified upstream licence. |
-| Terms reference | X Developer Guidelines and applicable X terms; no approved access grant exists for this path. |
-| Commercial use | Prohibited for this project because the access path is not authorized. |
-| Planned processing | None. This path must not be implemented, even as a fallback when the official API is unavailable, unaffordable, rate-limited, or unapproved. |
-| Retention/display/LLM | Prohibited because acquisition is not approved. |
-| Health/injury restrictions | The same health-inference concern applies in addition to the access problem. |
-| Deletion and operations | Block at configuration and code-review boundaries; alert if an adapter attempts this path. |
-| Status | `restricted`: prohibited for FPL Intelligence. |
+| Provider and access | X and public website sources, accessed only through methods allowed by the applicable source terms and law. This may include official APIs, RSS feeds, documented exports, and non-authenticated public web access. |
+| Terms reference | Record the applicable source terms, access method, and review date for each research run. Technical access alone is not evidence that the method or downstream use is permitted. |
+| Commercial use | Not authorized by research collection. A separate reviewed source policy is required before commercial or runtime use. |
+| Planned processing | Evaluate source relevance, account activity, publishing cadence, signal categories, and possible product value. Research outputs must not be presented as verified football facts. |
+| Retention/display/LLM | Retain only the minimum data needed for evaluation; prefer identifiers, URLs, timestamps, aggregate observations, and structured annotations over copied content. No product display or external-LLM processing is authorized by this row. |
+| Health/injury restrictions | Do not infer, diagnose, or profile health. Record explicitly stated football-availability claims only as unverified research observations. |
+| Deletion and operations | Collection must be proportionate and obey published technical limits. Do not bypass authentication, paywalls, robots controls, rate limits, CAPTCHAs, access controls, or other technical protections. Do not collect credentials, cookies, private-account material, direct messages, or non-public content. |
+| Status | `restricted`: permitted for internal research only, subject to the recorded restrictions. |
 
 ### 4.5 Official club websites, feeds, and social accounts
 
 | Field | Decision |
 | --- | --- |
-| Provider and access | Each club, website operator, feed provider, and social platform is a separate provider. No exact provider/product allowlist has been proposed. Public HTML, RSS, video, transcript, press release, or social access is not a single reusable permission category. |
+| Provider and access | Each club, website operator, feed provider, and social platform is a separate provider. Public-source research may use the methods described in section 4.4; runtime use remains separately reviewed per provider. |
 | Terms reference | Provider-specific website/API/feed terms, platform terms, copyright notice, robots policy, commercial licence, and press/media conditions must be recorded before enablement. No blanket terms reference is approved. |
 | Commercial use | Not reviewed per provider; disabled. Public or editorial access is not assumed to include commercial reuse. |
 | Planned processing | Potentially retrieve official availability or press-conference statements, normalize them, extract claims, retain minimal evidence, and link to the original. |
@@ -150,7 +150,7 @@ For live, public, or commercial use, an approval limited to reading posts, or a 
 | Display and redistribution | Unknown per provider. Linking, quotation, thumbnails, crests, video, transcript reuse, and attribution require separate review. |
 | External LLM | Disabled unless both source rights and the selected processor terms cover the transfer and purpose. |
 | Health/injury restrictions | Requires privacy review for real health information; source authority does not remove data-protection duties. Record whether the statement is first-party, quoted, or reported. |
-| Deletion and operations | Provider-specific corrections/removals, content change detection, rate limits, caching, attribution, cost, and outage behavior are required. No scraping fallback. |
+| Deletion and operations | Provider-specific corrections/removals, content change detection, rate limits, caching, attribution, cost, and outage behavior are required for runtime use. Research collection follows section 4.4 and is not a runtime fallback. |
 | Status | `not reviewed`; every club/provider path is disabled until added as its own reviewed row or policy record. |
 
 ### 4.6 Press-conference providers and rights holders
