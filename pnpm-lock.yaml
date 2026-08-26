@@ -14,6 +14,9 @@ importers:
 
   apps/web:
     dependencies:
+      '@fpl-intelligence/application':
+        specifier: workspace:*
+        version: link:../../packages/application
       '@fpl-intelligence/domain':
         specifier: workspace:*
         version: link:../../packages/domain

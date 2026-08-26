@@ -4,7 +4,7 @@ import {
   ImageInputError,
   MAX_IMAGE_BYTES,
   validateImageInput,
-} from "./image-input.js";
+} from "./image-input";
 
 function png(width: number, height: number): Uint8Array {
   const bytes = new Uint8Array(24);
