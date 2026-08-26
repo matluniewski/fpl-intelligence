@@ -212,6 +212,8 @@ If API permissions prevent applying these settings while the repository plan sup
 
 ### Current enforcement limitation
 
-As verified during FPL-14 on 2026-08-18, GitHub returns `403` for both branch protection and repository rulesets because the private repository's current plan does not provide those features. Enabling technical enforcement therefore requires either a plan upgrade or making the repository public. Both are separate commercial or public-release decisions and are not authorized by FPL-14.
+FPL-14 verified on 2026-08-18 that GitHub returned `403` for branch protection and repository rulesets while the repository was private on its then-current plan. On 2026-08-26, FPL-63 found the repository public, still unprotected, and linked to a publicly reachable deployment. That state conflicts with the original issue premise and does not itself prove an approved public release.
+
+FPL-86 owns the repository/deployment exposure decision. FPL-63 owns the protection option and activation after that decision. The current comparison, proposed settings, approval prerequisites, and safe verification procedure are recorded in [MAIN_BRANCH_PROTECTION.md](./MAIN_BRANCH_PROTECTION.md). Do not change visibility, purchase a plan, or apply the proposed payload by inferring approval from the current public state.
 
 Until that decision is approved and the rules are configured, the delivery workflow must enforce the same gate operationally: do not merge while any documented check is failing, skipped, pending, stale, or absent, and still require explicit human merge approval. Keep the missing platform enforcement visible as a repository risk and re-check it whenever the GitHub plan or repository visibility changes.
