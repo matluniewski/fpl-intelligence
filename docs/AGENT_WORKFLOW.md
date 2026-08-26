@@ -82,9 +82,9 @@ Unknown commercial rights, provider terms, external-processor terms, retention, 
 
 Prohibited shortcuts include:
 
-- scraping X, public websites, search results, or a user's browser session;
+- collecting from X, public websites, search results, or a user's browser session by bypassing authentication, paywalls, robots controls, rate limits, CAPTCHAs, access controls, or other technical protections;
 - unofficial FPL endpoints, stored credentials, cookies, or browser automation;
-- fallback to an unapproved source or provider;
+- treating research collection as approval for a runtime source, product display, commercial reuse, or external-LLM processing;
 - removing provenance or restrictions during normalization;
 - retaining screenshots or raw content for debugging convenience; and
 - bypassing approval, release, privacy, compliance, or kill-switch gates.
