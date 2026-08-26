@@ -1,9 +1,20 @@
 "use client";
 
+import { validateImageInput } from "@fpl-intelligence/application";
+import Link from "next/link";
 import { useRef, useState } from "react";
 
 import { Button } from "@/components/ui/button";
-import { Alert, Badge, Card, Field } from "@/components/ui/fpl";
+import { Alert, Badge, Card, Field, SelectField } from "@/components/ui/fpl";
+import {
+  confirmOnboardingCandidate,
+  createOnboardingCandidate,
+  illustrativeSelections,
+  ONBOARDING_PLAYER_OPTIONS,
+  ONBOARDING_SLOTS,
+  screenshotCandidateSelections,
+  selectionIssue,
+} from "@/lib/onboarding-model";
 
 type Step =
   | "upload"
@@ -24,7 +35,7 @@ const steps = [
 ] as const;
 
 function activeStep(step: Step): number {
-  if (step === "review") return 1;
+  if (step === "review" || step === "manual") return 1;
   if (step === "gameState") return 2;
   if (step === "confirm" || step === "confirmed") return 3;
   return 0;
@@ -58,16 +69,144 @@ function OnboardingRail({ step }: { readonly step: Step }) {
   );
 }
 
+function SquadEditor({
+  selections,
+  onChange,
+}: {
+  readonly selections: readonly string[];
+  readonly onChange: (index: number, playerId: string) => void;
+}) {
+  return (
+    <div className="grid gap-3 sm:grid-cols-2">
+      {ONBOARDING_SLOTS.map((slot, index) => (
+        <label className="text-sm" key={slot.label}>
+          <span className="font-medium">{slot.label}</span>
+          <SelectField
+            className="mt-1"
+            aria-label={slot.label}
+            value={selections[index] ?? ""}
+            onChange={(event) => onChange(index, event.target.value)}
+          >
+            <option value="">Select a player</option>
+            {ONBOARDING_PLAYER_OPTIONS.filter(
+              (player) => player.position === slot.position,
+            ).map((player) => (
+              <option key={player.id} value={player.id}>
+                {player.label}
+              </option>
+            ))}
+          </SelectField>
+        </label>
+      ))}
+    </div>
+  );
+}
+
 export function OnboardingFlow() {
   const [step, setStep] = useState<Step>("upload");
   const [fileName, setFileName] = useState<string>();
+  const [failureMessage, setFailureMessage] = useState("");
+  const [selections, setSelections] = useState<readonly string[]>(
+    ONBOARDING_SLOTS.map(() => ""),
+  );
+  const [bank, setBank] = useState("0.5");
+  const [freeTransfers, setFreeTransfers] = useState("1");
+  const [activeChip, setActiveChip] = useState("none");
+  const [candidate, setCandidate] = useState<ReturnType<
+    typeof createOnboardingCandidate
+  > | null>(null);
+  const [confirmedTeamStateId, setConfirmedTeamStateId] = useState<string>();
   const input = useRef<HTMLInputElement>(null);
+
   const chooseFile = () => input.current?.click();
-  const onFile = (file?: File) => {
+  const setPlayer = (index: number, playerId: string) => {
+    setSelections((current) =>
+      current.map((selection, slotIndex) =>
+        slotIndex === index ? playerId : selection,
+      ),
+    );
+  };
+  const fillIllustrativeSquad = () => setSelections(illustrativeSelections());
+
+  const onFile = async (file?: File) => {
     if (!file) return;
     setFileName(file.name);
-    setStep(file.type.startsWith("image/") ? "validating" : "failure");
+    setStep("validating");
+    const validation = validateImageInput(
+      new Uint8Array(await file.arrayBuffer()),
+    );
+    if (!validation.ok) {
+      setFailureMessage(validation.message);
+      setStep("failure");
+    }
   };
+
+  const showScreenshotCandidate = () => {
+    setSelections(screenshotCandidateSelections());
+    setStep("review");
+  };
+
+  const continueWithSquad = () => {
+    const issue = selectionIssue(selections);
+    if (issue !== null) {
+      setFailureMessage(issue);
+      return;
+    }
+    setFailureMessage("");
+    setStep("gameState");
+  };
+
+  const prepareConfirmation = () => {
+    const bankTenths = Math.round(Number(bank) * 10);
+    const parsedTransfers = Number(freeTransfers);
+    if (
+      !Number.isFinite(bankTenths) ||
+      bankTenths < 0 ||
+      !Number.isInteger(parsedTransfers) ||
+      parsedTransfers < 0 ||
+      parsedTransfers > 5
+    ) {
+      setFailureMessage(
+        "Enter a valid non-negative bank and between 0 and 5 free transfers.",
+      );
+      return;
+    }
+    try {
+      const now = new Date().toISOString();
+      const nextCandidate = createOnboardingCandidate({
+        selections,
+        bankTenths,
+        freeTransfers: parsedTransfers,
+        activeChip: activeChip === "none" ? null : activeChip,
+        candidateId: `onboarding-candidate-${crypto.randomUUID()}`,
+        enteredAt: now,
+      });
+      setCandidate(nextCandidate);
+      setFailureMessage("");
+      setStep("confirm");
+    } catch (error) {
+      setFailureMessage(
+        error instanceof Error ? error.message : "The squad is invalid.",
+      );
+    }
+  };
+
+  const confirmCandidate = () => {
+    if (candidate === null) return;
+    const result = confirmOnboardingCandidate({
+      candidate,
+      teamStateId: `onboarding-team-state-${crypto.randomUUID()}`,
+      confirmedAt: new Date().toISOString(),
+    });
+    if (!result.ok) {
+      setFailureMessage(result.messages.join(" "));
+      return;
+    }
+    setConfirmedTeamStateId(result.teamState.id);
+    setFailureMessage("");
+    setStep("confirmed");
+  };
+
   const title =
     step === "manual"
       ? "Enter the full squad manually"
@@ -80,6 +219,7 @@ export function OnboardingFlow() {
             : step === "confirmed"
               ? "Your TeamState is confirmed"
               : "Import your FPL squad";
+
   return (
     <div className="min-h-screen bg-[var(--fpl-color-bg-canvas)] lg:flex">
       <OnboardingRail step={step} />
@@ -91,6 +231,13 @@ export function OnboardingFlow() {
         <p className="mt-2 text-sm text-[var(--fpl-color-text-secondary)]">
           Illustrative local flow · no automated FPL actions
         </p>
+
+        {failureMessage && step !== "failure" && (
+          <Alert tone="danger" className="mt-5 max-w-3xl">
+            {failureMessage}
+          </Alert>
+        )}
+
         {step === "upload" && (
           <>
             <Card className="mt-8 max-w-3xl py-12 text-center">
@@ -112,7 +259,7 @@ export function OnboardingFlow() {
                 className="sr-only"
                 type="file"
                 accept="image/png,image/jpeg,image/webp"
-                onChange={(e) => onFile(e.target.files?.[0])}
+                onChange={(event) => void onFile(event.target.files?.[0])}
               />
             </Card>
             <div className="my-5 max-w-3xl text-center text-xs font-semibold text-[var(--fpl-color-text-secondary)]">
@@ -124,20 +271,21 @@ export function OnboardingFlow() {
             <Alert tone="warning" className="mt-8 max-w-3xl">
               <p className="font-semibold">Your screenshot is temporary</p>
               <p className="mt-1 text-sm text-[var(--fpl-color-text-secondary)]">
-                A deployed import deletes it after extraction and confirmation.
-                This prototype does not upload the selected file.
+                This local flow validates image bytes in the browser and does
+                not upload or retain the selected file.
               </p>
             </Alert>
           </>
         )}
+
         {step === "validating" && (
           <Card className="mt-8 max-w-3xl">
             <div className="flex justify-between">
               <p className="font-semibold">{fileName}</p>
-              <Badge>Validating…</Badge>
+              <Badge>Validated</Badge>
             </div>
             <p className="mt-3 text-sm text-[var(--fpl-color-text-secondary)]">
-              File checks run before any extraction.
+              Image bytes, format, size, and dimensions passed local checks.
             </p>
             <div className="mt-5 flex gap-3">
               <Button onClick={() => setStep("extracting")}>
@@ -149,30 +297,30 @@ export function OnboardingFlow() {
             </div>
           </Card>
         )}
+
         {step === "extracting" && (
           <Card className="mt-8 max-w-3xl">
-            <p className="font-semibold">Extracting a provisional candidate</p>
+            <p className="font-semibold">Preparing a provisional candidate</p>
             <div className="mt-4 h-2 rounded bg-[#e0e3eb]">
               <div className="h-2 w-2/3 rounded bg-[#470d73]" />
             </div>
             <p className="mt-4 text-sm text-[var(--fpl-color-text-secondary)]">
-              Resolving player identities and checking visible squad details.
+              The development flow uses illustrative extraction results; no
+              vision provider is enabled.
             </p>
             <div className="mt-5 flex gap-3">
-              <Button onClick={() => setStep("review")}>Show candidate</Button>
+              <Button onClick={showScreenshotCandidate}>Show candidate</Button>
               <Button variant="outline" onClick={() => setStep("manual")}>
                 Cancel and use manual entry
               </Button>
             </div>
           </Card>
         )}
+
         {step === "failure" && (
           <Alert tone="danger" className="mt-8 max-w-3xl">
             <p className="font-semibold">This file cannot be used</p>
-            <p className="mt-1 text-sm">
-              Choose a PNG, JPG or WebP screenshot, or use the complete manual
-              path.
-            </p>
+            <p className="mt-1 text-sm">{failureMessage}</p>
             <div className="mt-4 flex gap-3">
               <Button onClick={() => setStep("upload")}>
                 Choose another file
@@ -183,104 +331,75 @@ export function OnboardingFlow() {
             </div>
           </Alert>
         )}
-        {step === "review" && (
-          <>
-            <div className="mt-6 flex gap-2">
-              <Badge>13 matched</Badge>
-              <Badge className="bg-[#fff5d6]">1 uncertain</Badge>
-              <Badge className="bg-[#ffe3e5] text-[#9e141f]">1 missing</Badge>
-            </div>
-            <Card className="mt-4 max-w-3xl space-y-2">
-              {[
-                ["GK", "Raya", "Matched"],
-                ["DEF", "Gabriel?", "Resolve identity"],
-                ["DEF", "Not detected", "Missing player"],
-                ["MID", "Saka", "Matched"],
-              ].map(([position, player, status]) => (
-                <div
-                  key={player}
-                  className="flex items-center justify-between rounded-lg border p-3"
-                >
-                  <span>
-                    <b className="mr-6 text-xs text-[#470d73]">{position}</b>
-                    {player}
-                  </span>
-                  <Badge
-                    className={
-                      status === "Missing player"
-                        ? "bg-[#ffe3e5] text-[#9e141f]"
-                        : status === "Resolve identity"
-                          ? "bg-[#fff5d6]"
-                          : ""
-                    }
-                  >
-                    {status}
-                  </Badge>
-                </div>
-              ))}
-            </Card>
-            <div className="mt-5 flex gap-3">
-              <Button onClick={() => setStep("gameState")}>
-                Resolve issues
-              </Button>
-              <Button variant="outline" onClick={() => setStep("manual")}>
-                Start manual entry
-              </Button>
-            </div>
-          </>
-        )}
-        {step === "manual" && (
+
+        {(step === "review" || step === "manual") && (
           <>
             <p className="mt-6 max-w-3xl text-sm text-[var(--fpl-color-text-secondary)]">
-              This complete fallback creates the same TeamState and never
-              requires FPL credentials.
+              {step === "review"
+                ? "Resolve every uncertain or missing slot before confirmation."
+                : "Manual entry creates the same provisional TeamStateCandidate and requires no screenshot."}
             </p>
-            <Card className="mt-4 max-w-3xl space-y-4">
-              {[
-                ["Goalkeepers", "2 / 2"],
-                ["Defenders", "4 / 5"],
-                ["Midfielders", "4 / 5"],
-                ["Forwards", "1 / 3"],
-              ].map(([group, count]) => (
-                <div
-                  key={group}
-                  className="flex justify-between rounded-lg border p-4"
-                >
-                  <span className="font-semibold">{group}</span>
-                  <Badge className={count === "2 / 2" ? "" : "bg-[#fff5d6]"}>
-                    {count}
-                  </Badge>
-                </div>
-              ))}
-              <Button onClick={() => setStep("gameState")}>
-                Complete squad and continue
-              </Button>
+            <Card className="mt-4 max-w-3xl">
+              <SquadEditor selections={selections} onChange={setPlayer} />
+              <div className="mt-5 flex flex-wrap gap-3">
+                <Button variant="outline" onClick={fillIllustrativeSquad}>
+                  Use illustrative complete squad
+                </Button>
+                <Button onClick={continueWithSquad}>
+                  Continue with complete squad
+                </Button>
+              </div>
             </Card>
           </>
         )}
+
         {step === "gameState" && (
           <Card className="mt-8 max-w-3xl">
             <p className="font-semibold">Required game state</p>
             <div className="mt-4 grid gap-4 sm:grid-cols-3">
               <label className="text-sm">
-                Bank
-                <Field defaultValue="0.5" aria-label="Bank" />
+                Bank (£m)
+                <Field
+                  value={bank}
+                  min="0"
+                  step="0.1"
+                  type="number"
+                  aria-label="Bank"
+                  onChange={(event) => setBank(event.target.value)}
+                />
               </label>
               <label className="text-sm">
                 Free transfers
-                <Field defaultValue="2" aria-label="Free transfers" />
+                <Field
+                  value={freeTransfers}
+                  min="0"
+                  max="5"
+                  type="number"
+                  aria-label="Free transfers"
+                  onChange={(event) => setFreeTransfers(event.target.value)}
+                />
               </label>
               <label className="text-sm">
                 Active chip
-                <Field defaultValue="None" aria-label="Active chip" />
+                <SelectField
+                  value={activeChip}
+                  aria-label="Active chip"
+                  onChange={(event) => setActiveChip(event.target.value)}
+                >
+                  <option value="none">None</option>
+                  <option value="wildcard">Wildcard</option>
+                  <option value="free-hit">Free Hit</option>
+                  <option value="bench-boost">Bench Boost</option>
+                </SelectField>
               </label>
             </div>
-            <Button className="mt-5" onClick={() => setStep("confirm")}>
+            <Button className="mt-5" onClick={prepareConfirmation}>
               Continue to confirmation
             </Button>
           </Card>
         )}
-        {step === "confirm" && (
+
+        {step === "confirm" && candidate !== null && (
           <>
             <Card className="mt-8 max-w-3xl">
               <p className="font-semibold">
@@ -292,7 +411,7 @@ export function OnboardingFlow() {
                     Squad:{" "}
                   </dt>
                   <dd className="inline">
-                    15 players · valid formation and club limits
+                    {candidate.squad.length} players · domain validation ready
                   </dd>
                 </div>
                 <div>
@@ -300,27 +419,32 @@ export function OnboardingFlow() {
                     Game state:{" "}
                   </dt>
                   <dd className="inline">
-                    £0.5m bank · 2 free transfers · no active chip
+                    £{bank}m bank · {freeTransfers} free transfers ·{" "}
+                    {activeChip}
                   </dd>
                 </div>
               </dl>
             </Card>
-            <Button className="mt-5" onClick={() => setStep("confirmed")}>
+            <Button className="mt-5" onClick={confirmCandidate}>
               Confirm TeamState
             </Button>
           </>
         )}
+
         {step === "confirmed" && (
           <Alert className="mt-8 max-w-3xl">
             <p className="font-semibold">TeamState confirmed</p>
             <p className="mt-2 text-sm">
-              Only this reviewed normalized state is used for later
-              recommendations. Confirmation does not alter your official FPL
-              team.
+              Explicit domain confirmation produced {confirmedTeamStateId}. The
+              development session keeps it in memory only and never alters your
+              official FPL team.
             </p>
-            <Button className="mt-5" onClick={() => setStep("upload")}>
-              Review confirmed team
-            </Button>
+            <Link
+              className="mt-5 inline-flex rounded-md bg-[#470d73] px-4 py-2 text-sm font-medium text-white"
+              href="/"
+            >
+              Open illustrative news workspace
+            </Link>
           </Alert>
         )}
       </main>

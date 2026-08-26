@@ -30,10 +30,7 @@ import type {
   UtcInstant,
   VisionTeamStateCandidatePort,
 } from "@fpl-intelligence/domain";
-import type {
-  SafeImageDecoderPort,
-  ValidatedImageInput,
-} from "./image-input.js";
+import type { SafeImageDecoderPort, ValidatedImageInput } from "./image-input";
 
 export interface EphemeralScreenshotStore {
   accept(input: {

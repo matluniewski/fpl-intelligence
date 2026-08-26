@@ -29,8 +29,8 @@ import {
   type ManualTeamStateEntry,
   type VisionUsageEvent,
   type VisionUsageRecorder,
-} from "./team-state-import.js";
-import type { SafeImageDecoderPort } from "./image-input.js";
+} from "./team-state-import";
+import type { SafeImageDecoderPort } from "./image-input";
 
 const visionUsage = {
   eventId: "vision-event-1",
