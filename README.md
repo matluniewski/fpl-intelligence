@@ -22,6 +22,7 @@ Start with:
 - [Recommendation contract](docs/RECOMMENDATIONS.md)
 - [Development guide](docs/DEVELOPMENT.md)
 - [Agent delivery workflow](docs/AGENT_WORKFLOW.md)
+- [Public repository and deployment exposure audit](docs/PUBLIC_EXPOSURE_AUDIT.md)
 - [MVP validation plan](docs/VALIDATION.md)
 - [Screenshot privacy requirements](docs/SCREENSHOT_PRIVACY.md)
 - [News source compliance register](docs/NEWS_SOURCE_COMPLIANCE.md)
