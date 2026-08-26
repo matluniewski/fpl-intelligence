@@ -73,3 +73,12 @@ Figma link and deviations:
 - [ ] Required CI checks pass.
 - [ ] Critical product, architecture, security/privacy, compliance, provider, cost, deployment, release, destructive-data, secret-access, and real-FPL-action gates are approved or not applicable.
 - [ ] Human merge approval is still required; this pull request must not be merged based on this checklist alone.
+
+Independent review evidence:
+
+- Reviewer type and identity:
+- Review URL or immutable task artifact:
+- Reviewed head SHA:
+- Base ref and SHA:
+- Review outcome and UTC timestamp:
+- Finding resolutions and re-review evidence:

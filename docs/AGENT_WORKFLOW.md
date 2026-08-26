@@ -151,6 +151,10 @@ CI success is necessary evidence, not an approval to merge.
 
 Obtain a review pass distinct from the implementation/self-review pass. It may be performed through the approved code-review tooling or by a human reviewer, but it must examine the final diff and acceptance criteria rather than merely restating CI results.
 
+Follow [the independent review specification](./INDEPENDENT_REVIEW.md). Record the reviewer type and identity, immutable review URL or task artifact, full reviewed head SHA, base ref/SHA, scope, outcome, findings, resolutions, UTC timestamp, and any required re-review. A request that produces no submitted review, the implementation agent's own second pass, CI, a pull-request summary, or an approval for an older material head does not satisfy this gate.
+
+Independent quality review, GitHub required-approval enforcement, and explicit owner merge approval are separate gates. The reviewer receives no write, merge, secret, provider, or deployment authority merely by reviewing. If the repository has no approved independent reviewer, keep the affected pull request unmerged and continue only unrelated unblocked work.
+
 Classify findings by impact, address actionable in-scope findings, and record intentionally deferred work in Linear. Re-run affected checks after every revision. Resolve or explicitly accept all material findings before requesting merge approval.
 
 ## 12. Critical human approval gates
