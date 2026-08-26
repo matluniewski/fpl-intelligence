@@ -33,11 +33,13 @@ those resources are not approval.
 
 The risk-minimizing recommendation is to return both source and application to
 an internal state until FPL-46 is satisfied: make the repository private and
-make the production deployment access-controlled or unavailable. This
-recommendation is not authorization to perform either action. Repository
-visibility and deployment visibility require two separate explicit owner
-decisions, and private branch protection may require an approved GitHub Pro
-purchase under FPL-63.
+make the production deployment unavailable on the current Hobby plan, or
+access-controlled only after separately approving the required paid Vercel
+protection. This recommendation is not authorization to perform either action.
+Repository visibility and deployment visibility require two separate explicit
+owner decisions. Private branch protection may require an approved GitHub Pro
+purchase under FPL-63, while private Vercel production has its own separate plan
+and add-on cost.
 
 ## 2. Scope and safety
 
@@ -206,6 +208,26 @@ The public production path is therefore active. Preview deployment content is
 protected in the sampled current configuration, although preview hostnames are
 published by Vercel bot comments on pull requests.
 
+This access split is consistent with Vercel's current plan boundary. On Hobby,
+Standard Protection can protect preview deployments and generated deployment
+URLs, but the production domain remains public. Protecting all deployments,
+including production domains, requires Enterprise or a Pro plan with Advanced
+Deployment Protection. Vercel currently lists that Pro add-on at USD 150 per
+month and a minimum 30-day use period. Neither a Pro plan nor the add-on is
+approved by this audit.
+
+Primary references:
+
+- [Vercel Deployment Protection](https://vercel.com/docs/deployment-protection)
+- [Vercel Authentication](https://vercel.com/docs/deployment-protection/methods-to-protect-deployments/vercel-authentication)
+
+A no-new-spend internalization path on Hobby must therefore make the production
+domain unavailable, for example by an approved alias/deployment removal or
+disablement plan, and prevent automatic recreation. The exact reversible
+mutation must be verified in the authenticated project settings before it is
+approved. Merely enabling Standard Protection would leave the production domain
+public.
+
 The local Vercel CLI was not authenticated. The existing connected integration
 provided project and deployment inventory without requesting a new token. The
 available project response did not expose environment-variable inventory, and
@@ -245,18 +267,20 @@ All such sources remain separately gated.
 
 Repository visibility and deployment visibility must be decided separately.
 
-| Option                                  | Repository            | Production deployment            | Required gate                                                                                            | Consequence                                                             |
-| --------------------------------------- | --------------------- | -------------------------------- | -------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------- |
-| A. Internal prototype (recommended now) | Private               | Access-controlled or unavailable | Explicit visibility and deployment-change approvals; FPL-63 plan decision                                | Stops future anonymous access while public readiness remains incomplete |
-| B. Public source, internal application  | Public                | Access-controlled or unavailable | Open-source licensing, branding, privacy/security, contribution, and support decision; branch protection | Keeps code/history public but prevents an unapproved product beta       |
-| C. Private source, public beta          | Private               | Public                           | FPL-46 go decision and all blockers; FPL-63 private enforcement path                                     | Public product remains gated even though source is private              |
-| D. Public source and public beta        | Public                | Public                           | Both B and C gates plus explicit approval of the combined state                                          | Broadest exposure and operational obligation                            |
-| E. Time-bounded risk acceptance         | Unchanged temporarily | Unchanged temporarily            | Explicit owner acceptance with expiry, owner, monitoring, and rollback                                   | Does not resolve missing public-readiness controls                      |
+| Option                                  | Repository            | Production deployment                        | Required gate                                                                                               | Consequence                                                             |
+| --------------------------------------- | --------------------- | -------------------------------------------- | ----------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------- |
+| A. Internal prototype (recommended now) | Private               | Unavailable on Hobby, or paid access control | Explicit visibility/deployment approvals; FPL-63 plan decision; Vercel spend approval if protection is paid | Stops future anonymous access while public readiness remains incomplete |
+| B. Public source, internal application  | Public                | Unavailable on Hobby, or paid access control | Open-source readiness and branch protection; Vercel spend approval if protection is paid                    | Keeps code/history public but prevents an unapproved product beta       |
+| C. Private source, public beta          | Private               | Public                                       | FPL-46 go decision and all blockers; FPL-63 private enforcement path                                        | Public product remains gated even though source is private              |
+| D. Public source and public beta        | Public                | Public                                       | Both B and C gates plus explicit approval of the combined state                                             | Broadest exposure and operational obligation                            |
+| E. Time-bounded risk acceptance         | Unchanged temporarily | Unchanged temporarily                        | Explicit owner acceptance with expiry, owner, monitoring, and rollback                                      | Does not resolve missing public-readiness controls                      |
 
 Option A is recommended because FPL-46 is incomplete and explicitly prohibits an
 unapproved public deployment. Option B may be viable later if the owner wants an
 open-source repository independently of a public product. Options C and D must
-not proceed until FPL-46 reaches an approved go decision.
+not proceed until FPL-46 reaches an approved go decision. On the current Hobby
+plan, selecting A or B without new spend means making the production domain
+unavailable rather than relying on Standard Protection.
 
 ## 7. Remediation plan after owner decision
 
@@ -269,7 +293,10 @@ not proceed until FPL-46 reaches an approved go decision.
    a separately approved rewrite.
 4. Verify Vercel environment-variable and integration inventory through an
    approved authenticated administrative path without copying values.
-5. Record the approved rollback owner and verification window.
+5. If paid Vercel production protection is considered, capture and approve the
+   full current plan/add-on quote and minimum commitment rather than relying on
+   the public headline price alone.
+6. Record the approved rollback owner and verification window.
 
 ### 7.2 If the repository becomes private
 
@@ -294,13 +321,18 @@ not proceed until FPL-46 reaches an approved go decision.
 
 ### 7.4 If production becomes internal
 
-1. Choose access protection or removal/disablement based on the required
-   recovery path.
-2. Obtain explicit approval for that exact Vercel mutation.
-3. Apply it without changing preview protection or unrelated projects.
-4. Verify the production hostname anonymously and through the approved owner
+1. Choose between no-new-spend removal/disablement of the public production path
+   and separately paid all-deployment protection.
+2. For the no-new-spend path, verify how to remove or disable the production
+   alias/deployment and prevent Git integration from recreating it while keeping
+   a documented recovery route.
+3. For paid protection, capture the exact Pro and Advanced Deployment Protection
+   terms and obtain explicit spend approval.
+4. Obtain explicit approval for the exact Vercel mutation.
+5. Apply it without changing preview protection or unrelated projects.
+6. Verify the production hostname anonymously and through the approved owner
    access path.
-5. Remove or update the GitHub homepage only if separately approved.
+7. Remove or update the GitHub homepage only if separately approved.
 
 ### 7.5 If production remains public
 
@@ -323,6 +355,9 @@ The audit can proceed no further without owner decisions on:
 5. May an authenticated Vercel administrative inventory verify environment
    variables, integrations, protection settings, and retention without copying
    values?
+6. If production should remain deployed but access-controlled, is the owner
+   willing to consider and explicitly approve the required Vercel paid plan and
+   add-on after an exact quote is captured?
 
 Until those decisions are recorded, no visibility, deployment, history,
 security-control, billing, or branch-protection mutation is authorized.
