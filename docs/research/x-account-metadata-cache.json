@@ -1,0 +1,862 @@
+{
+  "researchDate": "2026-08-26",
+  "dataPolicy": "content-free metadata only; no raw post bodies",
+  "collectionRuns": [
+    {
+      "date": "2026-08-26",
+      "accessMethod": "public X profile syndication metadata; no authentication",
+      "result": "http_429",
+      "action": "stopped_without_retry_or_fallback",
+      "retainedRawContent": false
+    }
+  ],
+  "accounts": [
+    {
+      "handle": "PremierLeague",
+      "userId": "",
+      "identitySource": "unresolved",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "OfficialFPL",
+      "userId": "761568335138058240",
+      "identitySource": "wikidata_P2002_with_P6552_qualifier",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "PLComms",
+      "userId": "",
+      "identitySource": "unresolved",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "Arsenal",
+      "userId": "34613288",
+      "identitySource": "wikidata_P2002_with_P6552_qualifier",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "AVFCOfficial",
+      "userId": "27489253",
+      "identitySource": "wikidata_P2002_with_P6552_qualifier",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "afcbournemouth",
+      "userId": "20880206",
+      "identitySource": "wikidata_P2002_with_P6552_qualifier",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "BrentfordFC",
+      "userId": "103036163",
+      "identitySource": "public_x_profile_metadata_recorded_2026-08-26",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "OfficialBHAFC",
+      "userId": "57606154",
+      "identitySource": "wikidata_P2002_with_P6552_qualifier",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "ChelseaFC",
+      "userId": "22910295",
+      "identitySource": "wikidata_P2002_with_P6552_qualifier",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "Coventry_City",
+      "userId": "70677962",
+      "identitySource": "wikidata_P2002_with_P6552_qualifier",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "CPFC",
+      "userId": "85307509",
+      "identitySource": "wikidata_P2002_with_P6552_qualifier",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "Everton",
+      "userId": "15891449",
+      "identitySource": "wikidata_P2002_with_P6552_qualifier",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "FulhamFC",
+      "userId": "22903812",
+      "identitySource": "wikidata_P2002_with_P6552_qualifier",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "HullCity",
+      "userId": "104450912",
+      "identitySource": "wikidata_P2002_with_P6552_qualifier",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "IpswichTown",
+      "userId": "",
+      "identitySource": "unresolved",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "LUFC",
+      "userId": "1024095475",
+      "identitySource": "wikidata_P2002_with_P6552_qualifier",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "LFC",
+      "userId": "19583545",
+      "identitySource": "wikidata_P2002_with_P6552_qualifier",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "ManCity",
+      "userId": "14573900",
+      "identitySource": "wikidata_P2002_with_P6552_qualifier",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "ManUtd",
+      "userId": "558797310",
+      "identitySource": "wikidata_P2002_with_P6552_qualifier",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "NUFC",
+      "userId": "",
+      "identitySource": "unresolved",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "NFFC",
+      "userId": "39754653",
+      "identitySource": "wikidata_P2002_with_P6552_qualifier",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "SunderlandAFC",
+      "userId": "",
+      "identitySource": "unresolved",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "SpursOfficial",
+      "userId": "121402638",
+      "identitySource": "wikidata_P2002_with_P6552_qualifier",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "FA_PGMOL",
+      "userId": "",
+      "identitySource": "unresolved",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "EmiratesFACup",
+      "userId": "4418429837",
+      "identitySource": "wikidata_P2002_with_P6552_qualifier",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "Carabao_Cup",
+      "userId": "462495637",
+      "identitySource": "wikidata_P2002_with_P6552_qualifier",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "England",
+      "userId": "1903382054",
+      "identitySource": "wikidata_P2002_with_P6552_qualifier",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "SkySportsPL",
+      "userId": "713993413",
+      "identitySource": "wikidata_P2002_with_P6552_qualifier",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "BBCSport",
+      "userId": "265902729",
+      "identitySource": "wikidata_P2002_with_P6552_qualifier",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "BBCMOTD",
+      "userId": "",
+      "identitySource": "unresolved",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "TheAthleticFC",
+      "userId": "",
+      "identitySource": "unresolved",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "guardian_sport",
+      "userId": "46403451",
+      "identitySource": "wikidata_P2002_with_P6552_qualifier",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "TeleFootball",
+      "userId": "2219897472",
+      "identitySource": "wikidata_P2002_with_P6552_qualifier",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "OptaJoe",
+      "userId": "",
+      "identitySource": "unresolved",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "Squawka",
+      "userId": "385473825",
+      "identitySource": "wikidata_P2002_with_P6552_qualifier",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "David_Ornstein",
+      "userId": "",
+      "identitySource": "unresolved",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "FabrizioRomano",
+      "userId": "330262748",
+      "identitySource": "wikidata_P2002_with_P6552_qualifier",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "sistoney67",
+      "userId": "",
+      "identitySource": "unresolved",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "lauriewhitwell",
+      "userId": "",
+      "identitySource": "unresolved",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "JamesPearceLFC",
+      "userId": "265653022",
+      "identitySource": "wikidata_P2002_with_P6552_qualifier",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "_pauljoyce",
+      "userId": "",
+      "identitySource": "unresolved",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "davidlynchlfc",
+      "userId": "",
+      "identitySource": "unresolved",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "SamLee",
+      "userId": "",
+      "identitySource": "unresolved",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "Jack_Gaughan",
+      "userId": "",
+      "identitySource": "unresolved",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "liam_twomey",
+      "userId": "",
+      "identitySource": "unresolved",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "SJohnsonSport",
+      "userId": "",
+      "identitySource": "unresolved",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "charles_watts",
+      "userId": "",
+      "identitySource": "unresolved",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "jamesbenge",
+      "userId": "",
+      "identitySource": "unresolved",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "J_Tanswell",
+      "userId": "",
+      "identitySource": "unresolved",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "JPercyTelegraph",
+      "userId": "",
+      "identitySource": "unresolved",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "TomBarclay_",
+      "userId": "",
+      "identitySource": "unresolved",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "RobDorsettSky",
+      "userId": "",
+      "identitySource": "unresolved",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "mcgrathmike",
+      "userId": "",
+      "identitySource": "unresolved",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "NizaarKinsella",
+      "userId": "",
+      "identitySource": "unresolved",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "AlasdairGold",
+      "userId": "",
+      "identitySource": "unresolved",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "GeorgeCaulkin",
+      "userId": "",
+      "identitySource": "unresolved",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "ChrisDHWaugh",
+      "userId": "",
+      "identitySource": "unresolved",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "AndyNaylorBHAFC",
+      "userId": "",
+      "identitySource": "unresolved",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "PhilHay_",
+      "userId": "",
+      "identitySource": "unresolved",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "AdamLeventhal",
+      "userId": "",
+      "identitySource": "unresolved",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "peterrutzler",
+      "userId": "",
+      "identitySource": "unresolved",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "jackellyffc",
+      "userId": "",
+      "identitySource": "unresolved",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "SteveMadeley78",
+      "userId": "",
+      "identitySource": "unresolved",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "greggevans40",
+      "userId": "",
+      "identitySource": "unresolved",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "TimSpiers",
+      "userId": "",
+      "identitySource": "unresolved",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "markmcadamtv",
+      "userId": "",
+      "identitySource": "unresolved",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "MattWoosie",
+      "userId": "",
+      "identitySource": "unresolved",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "Paddy_Boyland",
+      "userId": "",
+      "identitySource": "unresolved",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "jaydmharris",
+      "userId": "",
+      "identitySource": "unresolved",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "nottmtails",
+      "userId": "",
+      "identitySource": "unresolved",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "AndyTurnerccfc",
+      "userId": "",
+      "identitySource": "unresolved",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "bazdjcooper",
+      "userId": "",
+      "identitySource": "unresolved",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "Stuart_Watson",
+      "userId": "",
+      "identitySource": "unresolved",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "Phil__Smith",
+      "userId": "",
+      "identitySource": "unresolved",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "TomCrockerEcho",
+      "userId": "",
+      "identitySource": "unresolved",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "SamiMokbel81_DM",
+      "userId": "",
+      "identitySource": "unresolved",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "BenDinnery",
+      "userId": "",
+      "identitySource": "unresolved",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "PremierInjuries",
+      "userId": "",
+      "identitySource": "unresolved",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "physioroom",
+      "userId": "",
+      "identitySource": "unresolved",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "Teamnewsandtix",
+      "userId": "",
+      "identitySource": "unresolved",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "fplstatus",
+      "userId": "",
+      "identitySource": "unresolved",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "fplstatistics",
+      "userId": "",
+      "identitySource": "unresolved",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "FPLPriceChanges",
+      "userId": "",
+      "identitySource": "unresolved",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "FFScoutLuke",
+      "userId": "",
+      "identitySource": "unresolved",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "Jumpthewave",
+      "userId": "",
+      "identitySource": "unresolved",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "FPL_Rockstar",
+      "userId": "",
+      "identitySource": "unresolved",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "OddsOnFPL",
+      "userId": "",
+      "identitySource": "unresolved",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "unitfootball",
+      "userId": "",
+      "identitySource": "unresolved",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "FPLAlerts",
+      "userId": "",
+      "identitySource": "unresolved",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "FFScout",
+      "userId": "",
+      "identitySource": "unresolved",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "FantasyFootyFix",
+      "userId": "",
+      "identitySource": "unresolved",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "FFH_HQ",
+      "userId": "",
+      "identitySource": "unresolved",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "LiveFPLnet",
+      "userId": "",
+      "identitySource": "unresolved",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "fplreview",
+      "userId": "",
+      "identitySource": "unresolved",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "TheFPLWire",
+      "userId": "",
+      "identitySource": "unresolved",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "FPLGeneral",
+      "userId": "",
+      "identitySource": "unresolved",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "lateriser12",
+      "userId": "",
+      "identitySource": "unresolved",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "Pras_fpl",
+      "userId": "",
+      "identitySource": "unresolved",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "zophar666",
+      "userId": "",
+      "identitySource": "unresolved",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "BigManBakar",
+      "userId": "",
+      "identitySource": "unresolved",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "LetsTalk_FPL",
+      "userId": "",
+      "identitySource": "unresolved",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "FPL__Raptor",
+      "userId": "",
+      "identitySource": "unresolved",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "FPL_Harry",
+      "userId": "",
+      "identitySource": "unresolved",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "FPLFocal",
+      "userId": "",
+      "identitySource": "unresolved",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "FPLMate",
+      "userId": "",
+      "identitySource": "unresolved",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "PlanetFPLPod",
+      "userId": "",
+      "identitySource": "unresolved",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "fplblackbox_az",
+      "userId": "",
+      "identitySource": "unresolved",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "hailcheaters",
+      "userId": "",
+      "identitySource": "unresolved",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "59thMinutePod",
+      "userId": "",
+      "identitySource": "unresolved",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "WGTA_FPL",
+      "userId": "",
+      "identitySource": "unresolved",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "FMLFPL",
+      "userId": "",
+      "identitySource": "unresolved",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "FPLFamily",
+      "userId": "",
+      "identitySource": "unresolved",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "FPLFran",
+      "userId": "",
+      "identitySource": "unresolved",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "FPLGunz",
+      "userId": "",
+      "identitySource": "unresolved",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "FPL_Heisenberg",
+      "userId": "",
+      "identitySource": "unresolved",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "FPL_Salah",
+      "userId": "",
+      "identitySource": "unresolved",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "FPLJUiCE",
+      "userId": "",
+      "identitySource": "unresolved",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "_FPLtips",
+      "userId": "",
+      "identitySource": "unresolved",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "FPLTeam_",
+      "userId": "",
+      "identitySource": "unresolved",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "FPLBanger",
+      "userId": "",
+      "identitySource": "unresolved",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    },
+    {
+      "handle": "FPLDylan7",
+      "userId": "",
+      "identitySource": "unresolved",
+      "accessStatus": "not_attempted_skip_x",
+      "observations": []
+    }
+  ]
+}
