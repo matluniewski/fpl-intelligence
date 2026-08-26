@@ -1,0 +1,89 @@
+{
+  "policyId": "x.research.fpl-76.proposed.v1",
+  "status": "disabled_pending_owner_approval",
+  "reviewedAt": "2026-08-26",
+  "purpose": "private_development_only_source_account_research",
+  "environment": "development_research_only",
+  "liveRequestsAuthorized": false,
+  "accountCreationAuthorized": false,
+  "termsAcceptanceAuthorized": false,
+  "credentialProvisioningAuthorized": false,
+  "creditPurchaseAuthorized": false,
+  "runtimeIngestionAuthorized": false,
+  "publicDisplayAuthorized": false,
+  "commercialUseAuthorized": false,
+  "externalLlmProcessingAuthorized": false,
+  "modelTrainingAuthorized": false,
+  "candidateAccountLimit": 121,
+  "shortlistAccountLimit": 50,
+  "windowDays": 90,
+  "requestLimit": 200,
+  "concurrencyLimit": 1,
+  "resourceLimits": {
+    "userReads": 121,
+    "postReads": 2400
+  },
+  "publicPriceAssumptionsUsd": {
+    "userRead": 0.01,
+    "postRead": 0.005,
+    "estimatedMaximum": 13.21,
+    "usageAlert": 10,
+    "ownerSpendCeiling": 15,
+    "authoritativeAtRuntime": false
+  },
+  "allowedEndpoints": [
+    "GET /2/users/by",
+    "GET /2/users/{id}/tweets",
+    "GET /2/tweets"
+  ],
+  "conditionalEndpoint": "X batch compliance jobs only after exact access and price approval",
+  "allowedUserFields": [
+    "id",
+    "username",
+    "name",
+    "created_at",
+    "protected",
+    "verified"
+  ],
+  "allowedPostFields": [
+    "id",
+    "author_id",
+    "created_at",
+    "edit_history_tweet_ids",
+    "text"
+  ],
+  "postTextPersistence": "prohibited",
+  "excludedPostTypes": ["replies", "retweets"],
+  "prohibitedAccessMethods": [
+    "html_scraping",
+    "browser_automation",
+    "browser_session_collection",
+    "public_syndication_endpoint",
+    "unofficial_api",
+    "copied_dataset",
+    "shared_credentials",
+    "authentication_bypass",
+    "rate_limit_bypass",
+    "captcha_bypass"
+  ],
+  "rawContentPersistence": "prohibited",
+  "rawContentProcessing": "local_ephemeral_memory_only",
+  "retainedIdentityAndEvidenceReferences": "blocked_pending_git_and_deletion_decision",
+  "retryPolicy": "no_automatic_retry_when_auth_rate_billing_or_usage_state_is_ambiguous",
+  "rateLimitResponse": "stop_run",
+  "unknownTermsResponse": "disable",
+  "manualKillSwitchRequired": true,
+  "globalKillSwitchDefault": "disabled",
+  "perAccountKillSwitchDefault": "disabled",
+  "requiredApprovals": [
+    "owner_use_case",
+    "account_and_terms",
+    "billing_and_total_spend",
+    "identity_retention_and_git_history",
+    "correction_deletion_and_termination",
+    "privacy_location_subprocessors_and_security",
+    "credential_provisioning",
+    "independent_review",
+    "final_live_run"
+  ]
+}
