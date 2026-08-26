@@ -550,21 +550,20 @@ These questions must be resolved by the owning Linear work before they become im
 1. Which vision-processing modes are acceptable for prototype and public use: local, external, or both?
 2. What exact screenshot fields and image layouts are supported, and when is extraction considered too uncertain to continue?
 3. What are the deletion deadlines for confirmed, failed, and abandoned screenshot flows?
-4. How is a local user's confirmed `TeamState` identified and persisted before any approved authentication work exists?
-5. Is a watchlist required in the first validation cohort, and if so, how is it created and maintained?
-6. What is the narrowest recommendation set that can validly demonstrate news-driven decision impact without a full optimizer?
-7. Which permitted sources form the initial curated allowlist, and which content may be stored, quoted, linked, or sent to an external LLM?
-8. Should a licensed availability provider be the canonical state source while reporter and X evidence acts as early warning?
-9. What manual source tiers and context rules are acceptable for Evidence Engine v0?
-10. How are confidence bands defined and validated without false precision?
-11. What constitutes a material change worthy of a user alert?
-12. How long should claims, evidence, signals, and recommendation snapshots persist after they expire?
-13. How should notifications be delivered during validation without prematurely selecting infrastructure?
-14. Does the current `Players` navigation item belong in the revised MVP?
-15. Which existing Figma patterns remain approved direction, and which require redesign around personalized changes?
-16. Which FPL-specific and general football datasets can be used for prototype, public beta, and commercial release?
-17. Which product name and visual assets are safe for public use?
-18. What evidence would justify advancing from an internal prototype to a public beta, and from public beta to a commercial product?
+4. Is a watchlist required in the first validation cohort, and if so, how is it created and maintained?
+5. What is the narrowest recommendation set that can validly demonstrate news-driven decision impact without a full optimizer?
+6. Which permitted sources form the initial curated allowlist, and which content may be stored, quoted, linked, or sent to an external LLM?
+7. Should a licensed availability provider be the canonical state source while reporter and X evidence acts as early warning?
+8. What manual source tiers and context rules are acceptable for Evidence Engine v0?
+9. How are confidence bands defined and validated without false precision?
+10. What constitutes a material change worthy of a user alert?
+11. How long should claims, evidence, signals, and recommendation snapshots persist after they expire?
+12. How should notifications be delivered during validation without prematurely selecting infrastructure?
+13. Does the current `Players` navigation item belong in the revised MVP?
+14. Which existing Figma patterns remain approved direction, and which require redesign around personalized changes?
+15. Which FPL-specific and general football datasets can be used for prototype, public beta, and commercial release?
+16. Which product name and visual assets are safe for public use?
+17. What evidence would justify advancing from an internal prototype to a public beta, and from public beta to a commercial product?
 
 ## 15. Product risks
 

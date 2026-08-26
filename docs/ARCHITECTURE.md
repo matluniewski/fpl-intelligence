@@ -168,11 +168,19 @@ The detailed conceptual provenance contract, lineage rules, provider-replacement
 
 PostgreSQL and Drizzle ORM provide the provider-neutral persistence foundation. Versioned migrations define application-owned recommendation, news-intelligence, provisional TeamState-candidate, and confirmed TeamState records in the `fpl_intelligence` schema. Screenshot bytes, crops, OCR, and provider DTOs are never persisted in these tables. Provisional candidates have bounded retention, while confirmed normalized TeamState snapshots remain the durable recommendation input. Persistence records remain separate from domain contracts, and no managed database provider or deployment topology has been selected.
 
+### 7.1 MVP local installation context
+
+Before approved authentication, personalized MVP state is scoped to the opaque local browser-installation context defined in [ADR-0002](./adr/0002-mvp-local-installation-context.md). It is neither a domain identity nor a provider identifier. Every context-owned application and repository operation must receive it explicitly, validate it at the server boundary, and fail closed when it is absent or invalid. No operation may use a default, shared, or inferred context.
+
+The browser stores the random context only in local storage. A reset removes it and requests deletion only for that context once a server-backed store exists. Clearing browser storage loses access and has no recovery path before future approved authentication. FPL-74 may use only synthetic non-production persistence until a separately approved retention and deletion policy permits durable storage.
+
 ## 8. Time, identity, and determinism
 
 Time-sensitive behavior must receive an explicit clock through a port or function input. Tests must not depend on the machine clock. Store instants in UTC and apply user-facing timezone formatting only at the presentation boundary.
 
 Use stable internal identifiers. Provider identifiers are aliases mapped at adapter boundaries and must not define domain identity. Version mapping, projection, extraction, and rule behavior when it affects reproducibility. Normalized material inputs cross the boundary with provenance references; derived artifacts retain lineage to those inputs rather than copying provider DTOs.
+
+An MVP local installation context is an access-scoping input, not a stable internal identifier. It must not enter domain models, provider aliases, logs, analytics, URLs, fixtures, or screenshots.
 
 For identical normalized inputs, clock value, configuration, and algorithm version, deterministic modules must return the same result and ordered alternatives. Tie-breaking rules must be explicit and tested.
 
